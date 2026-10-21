@@ -1,0 +1,166 @@
+{
+  "version": "0.7.0",
+  "release": "fkssj-0.7.0-20261019T093842Z",
+  "checkedAt": "2026-10-19T09:46:04.545080+00:00",
+  "url": "https://fkssj.harvey-ai.xyz/",
+  "serverDeployment": {
+    "release": "fkssj-0.7.0-20261019T093842Z",
+    "version": "0.7.0",
+    "previous": "releases/fkssj-0.6.0-20261019T090324Z",
+    "current": "releases/fkssj-0.7.0-20261019T093842Z",
+    "atomicSwitch": true,
+    "serverHashesMatch": true,
+    "fileCount": 24,
+    "totalBytes": 2559684
+  },
+  "staging": {
+    "release": "fkssj-0.7.0-20261019T093842Z",
+    "version": "0.7.0",
+    "fileCount": 24,
+    "totalBytes": 2559684,
+    "serverHashesMatch": true,
+    "stagedOnly": true,
+    "current": "releases/fkssj-0.6.0-20261019T090324Z"
+  },
+  "fileCount": 24,
+  "totalBytes": 2559684,
+  "httpVerification": {
+    "passed": true,
+    "report": "test-results/public-v0.7-files.json",
+    "files": 24,
+    "certificateValidationBypassed": false,
+    "dnsOverride": "47.251.167.53; normal TLS hostname and certificate checks retained",
+    "redirect": {
+      "status": 301,
+      "location": "https://fkssj.harvey-ai.xyz/"
+    },
+    "missingJsStatus": 404
+  },
+  "domainTests": {
+    "passed": 52,
+    "failed": 0,
+    "parts": {
+      "camp": 14,
+      "hero": 18,
+      "scavenging": 13,
+      "production": 7
+    },
+    "report": "test-results/v0.7-qa/domain.tap"
+  },
+  "localBrowser": {
+    "production": {
+      "url": "http://localhost:4173/",
+      "fixture": "earned-factories.json",
+      "provenance": "fixture-provenance.json",
+      "physicalDevice": false,
+      "naturalWaitSeconds": 300,
+      "certificateValidationBypassed": false,
+      "checks": [
+        "Legacy chapter and hero progress preserved; continuation task is lifejacket-made",
+        "Actual recipe UI enqueues 5-minute lifejacket; 10 plastic and 10 cloth charged once, no premature reward",
+        "Leaving and reloading preserves paid queue and remaining time, without charging again",
+        "Separate materials factory starts fabric while clothing factory keeps running",
+        "Factory queue, recipes and production controls remain usable at 390, 320 and landscape widths",
+        "Five real minutes produce fabric; collecting removes batch and credits exactly one item",
+        "Five actual wall-clock minutes complete lifejacket; UI claim credits one and removes batch",
+        "Completed craft unlocks next task, then explicit rescue-kit delivery consumes supplies once",
+        "Reload keeps delivered task and claimed batches, without repeating rewards"
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": [],
+      "realElapsedMs": 302976,
+      "passed": true,
+      "finishedAt": "2026-10-19T09:38:19.587Z"
+    },
+    "upgrade": "test-results/v0.7-qa/upgrade-local.json",
+    "tier": "test-results/v0.7-qa/tier-local.json",
+    "responsive": "test-results/v0.7-qa/layout-local.json",
+    "scavenging": "test-results/v0.7-qa/scavenging-scavenging-final.json",
+    "heroRegression": "test-results/v0.7-qa/results-regression.json"
+  },
+  "publicBrowser": {
+    "fresh": {
+      "passed": true,
+      "checks": 6,
+      "firstReadyMs": 10132,
+      "loadedSourceFiles": 20,
+      "report": "test-results/public-v0.7-result.json"
+    },
+    "production": {
+      "url": "https://fkssj.harvey-ai.xyz/",
+      "fixture": "earned-ready-soon.json",
+      "provenance": "earned-factories plus actual queueProduction fabric/lifejacket and tick(299); controlled near-ready setup, not a second natural five-minute wait",
+      "physicalDevice": false,
+      "certificateValidationBypassed": false,
+      "checks": [
+        "Paid queue finishes on public page without auto-credit; claiming lifejacket grants exactly one",
+        "Independent fabric queue claims one completed item",
+        "Public fabric UI charges verified 20 cloth and creates a 300-second paid batch",
+        "Public next-task claim and explicit supply delivery consume the displayed materials once",
+        "Reload preserves new paid batch and delivery with no duplicate cost or reward"
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": [],
+      "security": {
+        "issuer": "YE2",
+        "protocol": "TLS 1.3",
+        "subjectName": "fkssj.harvey-ai.xyz",
+        "validFrom": 1792387982,
+        "validTo": 1800163981
+      },
+      "passed": true
+    },
+    "upgrade": {
+      "url": "https://fkssj.harvey-ai.xyz/",
+      "fixture": "earned-materials.json",
+      "provenance": "fixture-provenance.json",
+      "physicalDevice": false,
+      "certificateValidationBypassed": false,
+      "checks": [
+        "Real touch gathers cargo and opens source-shaped three-stat upgrade panel",
+        "Upgrade dialog and button usable in 390, 320 and landscape layouts",
+        "First actual UI enhancement costs 50, raises future pickup chance to 1%, preserves existing cargo and capacity",
+        "Second enhancement also costs exactly 50, matching intermediate original frames",
+        "Reload preserves enhanced skill, voyage RNG and cargo without recharging",
+        "Full-screen reward stage shows actual three-material settlement and returns to camp"
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": [],
+      "security": {
+        "issuer": "YE2",
+        "protocol": "TLS 1.3",
+        "subjectName": "fkssj.harvey-ai.xyz",
+        "validFrom": 1792387982,
+        "validTo": 1800163981
+      },
+      "passed": true,
+      "finishedAt": "2026-10-19T09:45:09.287Z"
+    }
+  },
+  "renderer": {
+    "passed": true,
+    "report": "test-results/v0.7-qa/scene/final-results.json",
+    "controlledVisualFixtures": true,
+    "sourceHashes": {
+      "scene.js": "29705d704c91a15a9b0e33dc941c1bcc875fa9510bb642392469a47b7e644083",
+      "scavenging-view.js": "8785669cd722fadf06583e45494d558359f43d7d582574149b3b338218721aa8"
+    }
+  },
+  "physicalDeviceAcceptance": false,
+  "fullReplicaComplete": false,
+  "frontendBuildRun": false,
+  "gitCommitOrPush": false,
+  "staticCopyAndArchiveOnly": true,
+  "previousReleaseRetained": true,
+  "knownLimits": [
+    "Original Douyin full task order, higher upgrade tiers and full recipes are not verified or implemented.",
+    "Twelve continuation tasks, rope/plank recipes, factory costs and queue/storage interpretation are project configurations.",
+    "Two public fresh-start attempts had a readiness timeout and an intermittent guided touch miss; final six-step run passed without product changes. A passing retry does not prove the intermittent miss is fixed.",
+    "Local production waits used 302.976 real seconds; public near-ready queue fixture used domain tick(299), not a second natural five-minute playthrough.",
+    "Mobile viewports are browser emulation, not physical device acceptance.",
+    "Static rollback does not imply v0.7 save compatibility with v0.6. Preserve raw local saves before a downgrade."
+  ]
+}

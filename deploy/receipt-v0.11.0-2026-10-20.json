@@ -1,0 +1,270 @@
+{
+  "version": "0.11.0",
+  "release": "fkssj-0.11.0-20261020T031345Z",
+  "checkedAt": "2026-10-20T03:23:23.990824+00:00",
+  "url": "https://fkssj.harvey-ai.xyz/",
+  "deployment": {
+    "release": "fkssj-0.11.0-20261020T031345Z",
+    "version": "0.11.0",
+    "previous": "releases/fkssj-0.10.0-20261020T014324Z",
+    "current": "releases/fkssj-0.11.0-20261020T031345Z",
+    "atomicSwitch": true,
+    "serverHashesMatch": true,
+    "fileCount": 29,
+    "totalBytes": 2667799
+  },
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 7569,
+      "sha256": "6a57638bec807fb44667bc3fd79d46930f07e0629bb3e2a9a24a5f7f3b8c7e88"
+    },
+    {
+      "path": "bootstrap.js",
+      "bytes": 648,
+      "sha256": "a8dd238cf8fc70a32142e4b3ca3cd9a91298d6c3e01fc05b5a763442be842065"
+    },
+    {
+      "path": "app.js",
+      "bytes": 63996,
+      "sha256": "af7232d1efe6f933d750cd628f4c4fc3e646b83d50028d13aacaa1f505a8a4f9"
+    },
+    {
+      "path": "scene.js",
+      "bytes": 113165,
+      "sha256": "dc5b65de1819b85e6a4f66abaf86e692fe4d7f45cfc872ab9d73ae4a205af586"
+    },
+    {
+      "path": "game-state.js",
+      "bytes": 56571,
+      "sha256": "b74f10108c425bbc3e8560e39180b0ba9c291a635c01649c76323b807e905273"
+    },
+    {
+      "path": "progress-state.js",
+      "bytes": 36238,
+      "sha256": "08fbf95bb66017b1962402eaa7fc56e93b2d76617da73d4b6b04299baa4fbd76"
+    },
+    {
+      "path": "progress-ui.js",
+      "bytes": 27401,
+      "sha256": "a24ac4a410e69a1bf1704691b39695559b57ca76579a44ddcb88dd3d14f4c683"
+    },
+    {
+      "path": "progress-ui.css",
+      "bytes": 32496,
+      "sha256": "9f845cf1479e04c0a4f06f4d9973b3e1500c360d2fd410f98e9948117c252f5e"
+    },
+    {
+      "path": "battle-view.js",
+      "bytes": 37590,
+      "sha256": "1aa133cc10a6341793ee36ff4ae49dc3854e6802558987cab0a7c9bc1734328c"
+    },
+    {
+      "path": "campaign-view.js",
+      "bytes": 20691,
+      "sha256": "98dd0beb6c33daf16885cfa8b88d36c0749fb365098a51f09b5454ad23573017"
+    },
+    {
+      "path": "scavenging-state.js",
+      "bytes": 21014,
+      "sha256": "7c3f298d78a301e8db7e182e2fcc3d4b10c5da38314ec622d53ead0a7bfdc887"
+    },
+    {
+      "path": "scavenging-view.js",
+      "bytes": 30870,
+      "sha256": "8785669cd722fadf06583e45494d558359f43d7d582574149b3b338218721aa8"
+    },
+    {
+      "path": "scavenging-ui.js",
+      "bytes": 17834,
+      "sha256": "0a4d4032463aa967d34693b665d53b3948a4b24d24d9659535cdfc704a077b74"
+    },
+    {
+      "path": "scavenging-ui.css",
+      "bytes": 14394,
+      "sha256": "1e4204eca56f7c1158f4c28a4e5b6040d42694fe5d74be72d5ae8773bad73ca4"
+    },
+    {
+      "path": "production-state.js",
+      "bytes": 19741,
+      "sha256": "ce4154ebe90a5cd91aec40fa399204a5540c97133921fbccfd5207ee9fc8c233"
+    },
+    {
+      "path": "production-ui.js",
+      "bytes": 12285,
+      "sha256": "59f3a129b08929e1e5bd51b0d54666e15046660906e11ccba28a3a1fa287909b"
+    },
+    {
+      "path": "production-ui.css",
+      "bytes": 11552,
+      "sha256": "b7d4b567d64634d4dbcdf53ed7872ca055575ba43edf198c231cb6133f523b6a"
+    },
+    {
+      "path": "story-state.js",
+      "bytes": 15909,
+      "sha256": "4f0f2c6aaf5a45daab73d584e7ae6a597408b950007fbb55270ace8db8176f55"
+    },
+    {
+      "path": "diving-state.js",
+      "bytes": 10986,
+      "sha256": "54034f915568a46407e0e151be29dcc144bae86e04ff3e4f8527f032f8861c03"
+    },
+    {
+      "path": "diving-view.js",
+      "bytes": 7819,
+      "sha256": "a1bc6f34880ffa892341b710d3c41c986f74e6fab4e056c71d0569dd1001f1a8"
+    },
+    {
+      "path": "diving-ui.js",
+      "bytes": 9755,
+      "sha256": "33ae9c093b693e96a16e8632c2bf8d7483f8c916c6195b8dcf624913fb2872bd"
+    },
+    {
+      "path": "diving-ui.css",
+      "bytes": 6404,
+      "sha256": "54311a0078ce9ef597b8d8b62902fa7b041e0138b9e749300bc732d91c331b9f"
+    },
+    {
+      "path": "battle-view.css",
+      "bytes": 4997,
+      "sha256": "05c285280b3611e99ee06d81a90da7d41b944be792fa6a2fade3d927b3e60d6f"
+    },
+    {
+      "path": "icons.js",
+      "bytes": 23910,
+      "sha256": "426dedfc953563acb4ab3023066fc31b10d916907c358e718064b8fa10b26d04"
+    },
+    {
+      "path": "style.css",
+      "bytes": 55860,
+      "sha256": "54d4c90da3b96d1198fc9f84d1d66a0b03ddfb2b9d7919e86ec4be89cb771ecb"
+    },
+    {
+      "path": "assets/favicon.svg",
+      "bytes": 455,
+      "sha256": "4befe29dbf1917f297fd9e145bc21d563782a87faff548f623a77c507b91b584"
+    },
+    {
+      "path": "node_modules/three/build/three.module.js",
+      "bytes": 603113,
+      "sha256": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a"
+    },
+    {
+      "path": "node_modules/three/build/three.core.js",
+      "bytes": 1403455,
+      "sha256": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20"
+    },
+    {
+      "path": "node_modules/three/LICENSE",
+      "bytes": 1081,
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+    }
+  ],
+  "fileCount": 29,
+  "totalBytes": 2667799,
+  "staticSourceCopy": true,
+  "frontendBuildRun": false,
+  "commitOrPushPerformed": false,
+  "domainTests": {
+    "passed": 89,
+    "failed": 0,
+    "report": "test-results/v0.11-qa/domain.tap"
+  },
+  "browser": {
+    "local-fresh": {
+      "passed": true,
+      "checks": 6,
+      "report": "test-results/v0.11-qa/local-fresh.json"
+    },
+    "local-construction": {
+      "passed": true,
+      "checks": 8,
+      "report": "test-results/v0.11-qa/local-construction.json"
+    },
+    "local-chain": {
+      "passed": true,
+      "checks": 8,
+      "report": "test-results/v0.11-qa/local-chain.json"
+    },
+    "local-order": {
+      "passed": true,
+      "checks": 7,
+      "report": "test-results/v0.11-qa/local-order.json"
+    },
+    "local-side": {
+      "passed": true,
+      "checks": 6,
+      "report": "test-results/v0.11-qa/local-side.json"
+    },
+    "public-fresh": {
+      "passed": true,
+      "checks": 6,
+      "report": "test-results/v0.11-qa/public-fresh.json"
+    },
+    "public-construction": {
+      "passed": true,
+      "checks": 8,
+      "report": "test-results/v0.11-qa/public-construction.json"
+    },
+    "public-chain": {
+      "passed": true,
+      "checks": 8,
+      "report": "test-results/v0.11-qa/public-chain.json"
+    },
+    "public-order": {
+      "passed": true,
+      "checks": 7,
+      "report": "test-results/v0.11-qa/public-order.json"
+    },
+    "public-side": {
+      "passed": true,
+      "checks": 6,
+      "report": "test-results/v0.11-qa/public-side.json"
+    }
+  },
+  "httpVerification": {
+    "passed": true,
+    "fileCount": 29,
+    "allFilesFetchedForThisRelease": true,
+    "certificateValidationBypassed": false,
+    "report": "test-results/public-v0.11-files.json"
+  },
+  "models": {
+    "passed": true,
+    "sizes": [
+      [
+        390,
+        844
+      ],
+      [
+        320,
+        568
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "report": "test-results/v0.11-qa/models.json"
+  },
+  "dockNaturalWallMs": 20642,
+  "fixtureProvenance": [
+    "test-results/v0.11-qa/fixture-provenance.json",
+    "test-results/v0.11-qa/earned-fixture-provenance.json",
+    "test-results/v0.11-qa/earned-side-provenance.json"
+  ],
+  "physicalDeviceAcceptance": false,
+  "reference": "docs/reference-v0.11.md",
+  "limits": [
+    "Target is Douyin; public recording client channel remains independently unconfirmed.",
+    "Daily goods full panel confirms20glass+20scrap/1200seconds/storage50. Paid legacy20scrap/300second jobs keep snapshots.",
+    "Kitchen1-to2 full1200second duration is visible before payment; dock20seconds is adopted from the observed remaining countdown, not a pre-build full-duration panel.",
+    "Other facility timers and full construction material/blueprint conditions are unverified.",
+    "One new resident order confirms40XP/120coins. Overall coin income rate, recurring order pool and refresh periods are unverified.",
+    "A3000coin storm payout is visible but not mapped to the existing first-storm implementation.",
+    "Five production side quests are supported; the24resident-demand main target is recorded but not activated before its order pool is available.",
+    "Browser long production and kitchen upgrade use controlled offline timestamps; only the dock wait is natural wall time.",
+    "Public-action fixtures prove reachability, not natural gathering/economy pace; historical fixtures remain unchanged.",
+    "Productionv5 and storyv2 protect new saves; static rollback does not imply lossless save downgrade."
+  ]
+}

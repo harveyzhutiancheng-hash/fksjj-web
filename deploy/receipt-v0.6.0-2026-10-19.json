@@ -1,0 +1,405 @@
+{
+  "version": "0.6.0",
+  "release": "fkssj-0.6.0-20261019T090324Z",
+  "checkedAt": "2026-10-19T09:07:24.817849+00:00",
+  "url": "https://fkssj.harvey-ai.xyz/",
+  "serverDeployment": {
+    "release": "fkssj-0.6.0-20261019T090324Z",
+    "version": "0.6.0",
+    "previous": "releases/fkssj-0.5.0-20261019T083012Z",
+    "current": "releases/fkssj-0.6.0-20261019T090324Z",
+    "atomicSwitch": true,
+    "serverHashesMatch": true,
+    "fileCount": 21,
+    "totalBytes": 2489915
+  },
+  "staging": {
+    "release": "fkssj-0.6.0-20261019T090324Z",
+    "version": "0.6.0",
+    "fileCount": 21,
+    "totalBytes": 2489915,
+    "serverHashesMatch": true,
+    "stagedOnly": true,
+    "macOSMetadataRemoved": [
+      "._.",
+      "._app.js",
+      "._assets",
+      "._battle-view.css",
+      "._battle-view.js",
+      "._bootstrap.js",
+      "._campaign-view.js",
+      "._game-state.js",
+      "._icons.js",
+      "._index.html",
+      "._node_modules",
+      "._progress-state.js",
+      "._progress-ui.css",
+      "._progress-ui.js",
+      "._release.json",
+      "._scavenging-state.js",
+      "._scavenging-ui.css",
+      "._scavenging-ui.js",
+      "._scavenging-view.js",
+      "._scene.js",
+      "._style.css",
+      "assets/._favicon.svg",
+      "node_modules/._three",
+      "node_modules/three/._LICENSE",
+      "node_modules/three/._build",
+      "node_modules/three/build/._three.core.js",
+      "node_modules/three/build/._three.module.js"
+    ],
+    "current": "releases/fkssj-0.5.0-20261019T083012Z"
+  },
+  "httpVerification": {
+    "version": "0.6.0",
+    "release": "fkssj-0.6.0-20261019T090324Z",
+    "checkedAt": "2026-10-19T09:05:00.295Z",
+    "url": "https://fkssj.harvey-ai.xyz/",
+    "certificateValidationBypassed": false,
+    "dnsOverride": "curl --resolve pins host to deployment IP; normal TLS certificate validation remains enabled",
+    "files": [
+      {
+        "path": "index.html",
+        "status": 200,
+        "bytes": 7383,
+        "sha256": "0a3c201485491c3979151afbf0e34fcb9089aee74b30fff6d1c7ea6c88a7b7b7",
+        "contentType": "text/html",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "bootstrap.js",
+        "status": 200,
+        "bytes": 648,
+        "sha256": "a8dd238cf8fc70a32142e4b3ca3cd9a91298d6c3e01fc05b5a763442be842065",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "app.js",
+        "status": 200,
+        "bytes": 48552,
+        "sha256": "75977e437a46d4d02ddabc17bf0570c706656942224fe065d3b8259256a6723b",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "scene.js",
+        "status": 200,
+        "bytes": 86762,
+        "sha256": "3fa190ee9622eaecc3837a7e45e088e4d2ab7211cf58eb78f8edede95ce777fe",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "game-state.js",
+        "status": 200,
+        "bytes": 39057,
+        "sha256": "876bcb9bbcd907b227265a826f1c62ee8abed49c01b5578011e85a59d72b2ef1",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "progress-state.js",
+        "status": 200,
+        "bytes": 35907,
+        "sha256": "cc737fc6c8dabdf18807773a53fac8077d71c6c374efb3eb93fb1032b0f62741",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "progress-ui.js",
+        "status": 200,
+        "bytes": 27232,
+        "sha256": "e3f17495ae163d388315014f332d7aeda75b6017875a518af83901c665b404b8",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "progress-ui.css",
+        "status": 200,
+        "bytes": 32496,
+        "sha256": "9f845cf1479e04c0a4f06f4d9973b3e1500c360d2fd410f98e9948117c252f5e",
+        "contentType": "text/css",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "battle-view.js",
+        "status": 200,
+        "bytes": 37590,
+        "sha256": "1aa133cc10a6341793ee36ff4ae49dc3854e6802558987cab0a7c9bc1734328c",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "campaign-view.js",
+        "status": 200,
+        "bytes": 20691,
+        "sha256": "98dd0beb6c33daf16885cfa8b88d36c0749fb365098a51f09b5454ad23573017",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "scavenging-state.js",
+        "status": 200,
+        "bytes": 16359,
+        "sha256": "164e420ceccf919a367337c2db37f0a9bf3eb6adead336950a2a03a6fed106dd",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "scavenging-view.js",
+        "status": 200,
+        "bytes": 28679,
+        "sha256": "36600484cbacd225c63d77f2dc102ddb099a3875d377b7ca8cd16fc65ecb5c86",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "scavenging-ui.js",
+        "status": 200,
+        "bytes": 14317,
+        "sha256": "ec1d5817fde821266d1bb48a0a316f093d2a8b6bc0f67cb72231b87b93a47a9f",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "scavenging-ui.css",
+        "status": 200,
+        "bytes": 9773,
+        "sha256": "f28fe11316da7825c2c7dd41182848de44c0f7d91eb9e73d844502af9004fbe2",
+        "contentType": "text/css",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "battle-view.css",
+        "status": 200,
+        "bytes": 4997,
+        "sha256": "05c285280b3611e99ee06d81a90da7d41b944be792fa6a2fade3d927b3e60d6f",
+        "contentType": "text/css",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "icons.js",
+        "status": 200,
+        "bytes": 17766,
+        "sha256": "2b17dfbb2f42a8ab5c5eaac1621af7c3f7f60c282198726eb94f7432c638a23e",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "style.css",
+        "status": 200,
+        "bytes": 53602,
+        "sha256": "a1bd76600009a05723528a5ddc124e7a699a7b8b07ca44212b5a0cb94b21fd43",
+        "contentType": "text/css",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "assets/favicon.svg",
+        "status": 200,
+        "bytes": 455,
+        "sha256": "4befe29dbf1917f297fd9e145bc21d563782a87faff548f623a77c507b91b584",
+        "contentType": "image/svg+xml",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "node_modules/three/build/three.module.js",
+        "status": 200,
+        "bytes": 603113,
+        "sha256": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "node_modules/three/build/three.core.js",
+        "status": 200,
+        "bytes": 1403455,
+        "sha256": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
+        "contentType": "application/javascript",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      },
+      {
+        "path": "node_modules/three/LICENSE",
+        "status": 200,
+        "bytes": 1081,
+        "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+        "contentType": "application/octet-stream",
+        "cacheControl": "no-cache",
+        "nosniff": "nosniff",
+        "matchesRelease": true
+      }
+    ],
+    "manifestSha256": "942d459c2b05606c622d76b4369eb88f3b214810fea67a1dbb6e33f933ccd9cd",
+    "redirect": {
+      "status": 301,
+      "location": "https://fkssj.harvey-ai.xyz/"
+    },
+    "missingJsStatus": 404,
+    "fileCount": 21,
+    "totalBytes": 2489915,
+    "passed": true,
+    "finishedAt": "2026-10-19T09:05:41.241Z"
+  },
+  "domainTests": {
+    "passed": 43,
+    "failed": 0,
+    "camp": 14,
+    "progression": 18,
+    "scavenging": 11,
+    "source": "test-results/v0.6-qa/domain.tap"
+  },
+  "localScavenging": {
+    "passed": true,
+    "checks": 10,
+    "source": "test-results/v0.6-qa/scavenging-local.json",
+    "fixture": "test-results/progression-qa/ui-earned-prebattle.json",
+    "errors": [],
+    "failedRequests": [],
+    "badResponses": []
+  },
+  "localProgressionRegression": {
+    "passed": true,
+    "checks": 9,
+    "source": "test-results/v0.6-qa/results-regression.json",
+    "fixture": "Existing v0.4 chapter-domain-earned + actual upgrade/recruit/formation UI save. Only initial savedAt refreshed; no task, hero, or wallet edits.",
+    "errors": [],
+    "failedRequests": [],
+    "badResponses": []
+  },
+  "responsiveBrowser": {
+    "passed": true,
+    "viewports": [
+      [
+        390,
+        844
+      ],
+      [
+        320,
+        568
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "normal": "test-results/v0.6-qa/responsive/scene-results.json",
+    "fullCargo": "test-results/v0.6-qa/responsive/full-results.json",
+    "fullCargoFixture": "Controlled GameState-driven collection to 100 with hazards removed only during preparation; not natural uninterrupted play.",
+    "fixtureProvenance": "test-results/v0.6-qa/responsive/full-visual-provenance.json",
+    "renderer": {
+      "calls": 27,
+      "triangles": 5250,
+      "initialGeometry": 23,
+      "geometries": 23,
+      "heroYFraction": 0.4400015062432789,
+      "paused": true,
+      "resumed": true,
+      "contextLost": true,
+      "rootRemoved": true
+    },
+    "fallback": "test-results/v0.6-qa/responsive/freeze.json"
+  },
+  "publicFreshBrowser": {
+    "passed": true,
+    "checks": 6,
+    "source": "test-results/public-v0.6-result.json",
+    "fixture": null,
+    "errors": [],
+    "failedRequests": [],
+    "badResponses": [],
+    "fixtureUsed": false,
+    "loadedSourceFiles": 17,
+    "allObservedHashesMatch": true,
+    "certificate": {
+      "issuer": "YE2",
+      "protocol": "TLS 1.3",
+      "subjectName": "fkssj.harvey-ai.xyz",
+      "validFrom": 1792387982,
+      "validTo": 1800163981
+    },
+    "screenshot": "test-results/public-v0.6-fishing.png"
+  },
+  "publicScavenging": {
+    "passed": true,
+    "checks": 10,
+    "source": "test-results/v0.6-qa/scavenging-public.json",
+    "fixture": "test-results/progression-qa/ui-earned-prebattle.json",
+    "errors": [],
+    "failedRequests": [],
+    "badResponses": []
+  },
+  "publicThreats": {
+    "passed": true,
+    "checks": 5,
+    "source": "test-results/v0.6-qa/threats-public.json",
+    "fixture": "Previously earned chapter fixture; no game-state, position, creature or cargo edits. Movement via real keyboard input, checkpoints via pause UI.",
+    "errors": [],
+    "failedRequests": null,
+    "badResponses": null
+  },
+  "initialPublicFreshTimeout": {
+    "source": "test-results/v0.6-qa/first-public-fresh-timeout.json",
+    "description": "One projected camp salvage touch was not credited during parallel browser checks. Same unmodified script and source passed all 6 checks on isolated rerun; exact first-miss cause not established."
+  },
+  "compatibility": {
+    "outerSaveKey": "fkssj-save-v1",
+    "outerVersion": 1,
+    "progressionVersion": 2,
+    "scavengingVersion": 1,
+    "legacyPlasticAndClothDefaultZero": true,
+    "offlineVoyageFrozen": true,
+    "returnRewardOnce": true,
+    "staticRollbackTo05LosesNewFields": "Preserve raw 0.6 browser save and prepare migration before using previous static release."
+  },
+  "reference": "docs/reference-v0.6.md",
+  "knownProjectConfiguration": [
+    "map, speed, pickup quantities and threat timing",
+    "fish theft ratio",
+    "remaining cargo protective return after failure; original failure payout unknown"
+  ],
+  "frontendBuildExecuted": false,
+  "gitCommitOrPushPerformed": false,
+  "physicalDeviceAcceptance": false,
+  "fullReplicaComplete": false
+}

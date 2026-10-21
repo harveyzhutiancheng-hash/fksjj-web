@@ -1,0 +1,15 @@
+{
+  "name": "ocean-drifters",
+  "version": "0.13.0",
+  "private": true,
+  "type": "module",
+  "description": "手机浏览器里的海上经营、英雄救援与闯关游戏",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "test": "node --test game-state.test.mjs progress-state.test.mjs scavenging-state.test.mjs production-state.test.mjs diving-state.test.mjs story-state.test.mjs construction-state.test.mjs"
+  },
+  "dependencies": {
+    "three": "0.180.0"
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "version": "0.8.0",
+  "release": "fkssj-0.8.0-20261019T103456Z",
+  "checkedAt": "2026-10-19T10:40:25.736192+00:00",
+  "url": "https://fkssj.harvey-ai.xyz/",
+  "serverDeployment": {
+    "release": "fkssj-0.8.0-20261019T103456Z",
+    "version": "0.8.0",
+    "previous": "releases/fkssj-0.7.0-20261019T093842Z",
+    "current": "releases/fkssj-0.8.0-20261019T103456Z",
+    "atomicSwitch": true,
+    "serverHashesMatch": true,
+    "fileCount": 24,
+    "totalBytes": 2572443
+  },
+  "staging": {
+    "release": "fkssj-0.8.0-20261019T103456Z",
+    "version": "0.8.0",
+    "fileCount": 24,
+    "totalBytes": 2572443,
+    "serverHashesMatch": true,
+    "stagedOnly": true,
+    "current": "releases/fkssj-0.7.0-20261019T093842Z"
+  },
+  "fileCount": 24,
+  "totalBytes": 2572443,
+  "httpVerification": {
+    "passed": true,
+    "report": "test-results/public-v0.8-files.json",
+    "files": 24,
+    "certificateValidationBypassed": false,
+    "dnsOverride": "47.251.167.53; normal TLS hostname and certificate checks retained",
+    "redirect": {
+      "status": 301,
+      "location": "https://fkssj.harvey-ai.xyz/"
+    },
+    "missingJsStatus": 404
+  },
+  "domainTests": {
+    "passed": 55,
+    "failed": 0,
+    "parts": {
+      "camp": 14,
+      "hero": 18,
+      "scavenging": 13,
+      "production": 10
+    },
+    "evidence": "Execution output in this task, exit 0, no separate TAP file."
+  },
+  "localBrowser": {
+    "fishLine": {
+      "url": "http://localhost:4173/",
+      "label": "local",
+      "checks": [
+        "Legacy camp, hero and continuation save retained",
+        "Continuation claim has working guide and a real touch claims it once",
+        "Level-1 fish factory shows level-2 recipe requirement",
+        "Factory management upgrades slicer and returns to unlocked fish-line production",
+        "Real UI charges 20 fish once and starts a 300-second fish-line batch",
+        "Factory tabs, level action, queue and produce button fit three mobile layouts",
+        "Reload preserves paid batch snapshot without duplicate material charge",
+        "Five real minutes finish fish-line; claim credits one item and cannot repeat",
+        "Empty-queue v2 save preserves new fish-line inventory after reload"
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": [],
+      "physicalDevice": false,
+      "naturalProductionSeconds": 300,
+      "fixture": "fishline-fixture.json",
+      "realElapsedMs": 300103,
+      "passed": true
+    },
+    "kitchen": {
+      "url": "http://localhost:4173/",
+      "label": "local",
+      "checks": [
+        "Legacy 12 claimed tasks lead to kitchen build; actual guide touch places it and charges shown project cost once",
+        "Construction task completes without fabricating an unknown original reward",
+        "Delivery goal routes to kitchen recipe, charges 1 fish and 5 wood once, and queues 5-minute grilled fish",
+        "Five-factory selector and kitchen queue remain usable at 390, 320 and landscape",
+        "Reload restores paid kitchen batch and 13 claimed tasks",
+        "Five actual minutes produce one grilled fish; collector consumes it for exactly 40 XP and 75 coins",
+        "Reload preserves delivery, resources and XP without repeating rewards"
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": [],
+      "physicalDevice": false,
+      "naturalProductionSeconds": 300,
+      "fixture": "kitchen-fixture.json",
+      "realElapsedMs": 300298,
+      "passed": true
+    },
+    "shortageRoute": "test-results/v0.8-qa/local-fish-route.json",
+    "multipleFactories": "test-results/v0.8-qa/multiple-factories.json",
+    "detailStability": "test-results/v0.8-qa/detail-stability.json",
+    "overlay": "test-results/v0.8-qa/overlay-stability.json"
+  },
+  "openingTouch": {
+    "rounds": 60,
+    "touches": 201,
+    "passed": true,
+    "retriesAfterMiss": false,
+    "report": "test-results/v0.8-qa/summary.json",
+    "actualGestureChecks": 12,
+    "historicalPublicMissRootCauseProven": false
+  },
+  "renderer": {
+    "passed": true,
+    "report": "test-results/v0.8-qa/seafood-results.json",
+    "controlledVisualFixtures": true,
+    "sceneSha256": "c03ec1aa75f87790c5d0df50a87e8778a65309de3ce6f5c6c3d0f24aec6621a6"
+  },
+  "publicBrowser": {
+    "fresh": {
+      "passed": true,
+      "checks": 6,
+      "firstReadyMs": 7048,
+      "loadedSourceFiles": 20,
+      "report": "test-results/public-v0.8-result.json"
+    },
+    "production": {
+      "version": "0.8.0",
+      "release": "fkssj-0.8.0-20261019T103456Z",
+      "url": "https://fkssj.harvey-ai.xyz/",
+      "fixture": "public-production-fixture.json",
+      "acceleratedSetupSeconds": 299,
+      "physicalDevice": false,
+      "certificateValidationBypassed": false,
+      "checks": [
+        "HTTPS continuation route opens kitchen; paid near-ready grilled fish yields one item once",
+        "Collector consumes one grilled fish and grants exactly 40 XP plus 75 coins",
+        "Second independent factory yields one fish-line item; both claimed jobs are removed",
+        "Public recipe button pays 1 fish and 5 wood once for a new 300-second batch",
+        "Reload retains v2 inventory, paid batch and all 14 task claims without repeating rewards"
+      ],
+      "errors": [],
+      "failedRequests": [],
+      "badResponses": [],
+      "certificate": {
+        "issuer": "YE2",
+        "protocol": "TLS 1.3",
+        "subjectName": "fkssj.harvey-ai.xyz",
+        "validFrom": 1792387982,
+        "validTo": 1800163981
+      },
+      "passed": true,
+      "finishedAt": "2026-10-19T10:39:39.625Z"
+    }
+  },
+  "physicalDeviceAcceptance": false,
+  "fullReplicaComplete": false,
+  "frontendBuildRun": false,
+  "gitCommitOrPush": false,
+  "staticCopyAndArchiveOnly": true,
+  "previousReleaseRetained": true,
+  "knownLimits": [
+    "Video evidence does not independently confirm the Douyin channel or complete original task order.",
+    "Kitchen construction cost, task placement, fish-line unlock level and queue/batch rules remain project configuration.",
+    "Rope/plank original values, broadcast/diving conditions and the seaweed/glass acquisition chain remain incomplete.",
+    "Current passive sashimi production differs from the recorded original 6 fish / 90 seconds; existing opening saves and production were preserved.",
+    "The local fish-line and grilled-fish waits took 300103 and 300298 real milliseconds respectively. Public smoke uses domain-action tick(299) fixtures, not another natural five-minute run.",
+    "Mobile viewports are browser emulation, not physical phone acceptance.",
+    "Production saves are now version 2. Preserve raw local saves before any static downgrade."
+  ]
+}

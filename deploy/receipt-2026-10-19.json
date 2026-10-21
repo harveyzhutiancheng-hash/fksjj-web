@@ -1,0 +1,230 @@
+{
+  "release": "fkssj-0.2.0",
+  "version": "0.2.0",
+  "checkedAt": "2026-10-19T14:35:57+08:00",
+  "url": "https://fkssj.harvey-ai.xyz/",
+  "requestTarget": {
+    "ip": "47.251.167.53",
+    "observedRemoteIps": [
+      "47.251.167.53"
+    ],
+    "method": "curl --resolve; certificate verification enabled; no -k",
+    "dnsPropagation": "not assessed by these pinned-IP requests"
+  },
+  "httpVerification": {
+    "result": "pass",
+    "fileCount": 11,
+    "totalBytes": 2210723,
+    "allFileHashesAndSizesMatch": true,
+    "publicReleaseManifestMatches": true,
+    "releaseManifestSha256": "e6cfd14311833915d62936fd17ef3e3aeabc58106581b291ac8a1285d1d4d11f",
+    "tlsCertificateVerified": true,
+    "javascriptMimeValid": true,
+    "cacheControl": "no-cache",
+    "xContentTypeOptions": "nosniff",
+    "httpRedirect": {
+      "status": 301,
+      "location": "https://fkssj.harvey-ai.xyz/",
+      "pass": true
+    },
+    "missingJavascript": {
+      "status": 404,
+      "pass": true
+    },
+    "files": [
+      {
+        "path": "index.html",
+        "status": 200,
+        "bytes": 5480,
+        "sha256": "181f371cb60271f24ad52365fa967c878eccf83122171351c472146618c8ad61",
+        "matchesRelease": true,
+        "contentType": "text/html"
+      },
+      {
+        "path": "bootstrap.js",
+        "status": 200,
+        "bytes": 648,
+        "sha256": "a8dd238cf8fc70a32142e4b3ca3cd9a91298d6c3e01fc05b5a763442be842065",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "app.js",
+        "status": 200,
+        "bytes": 35527,
+        "sha256": "9eb28b5214cb865ee798d73b7575043bf3cd93345186cf43110f45582fcec384",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "scene.js",
+        "status": 200,
+        "bytes": 75162,
+        "sha256": "3783792b860e257e9910c4da7afa3cdf5aaf781c78598511d2bdda68bd1c513d",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "game-state.js",
+        "status": 200,
+        "bytes": 31889,
+        "sha256": "53f2f042a99f67b58511a6779dadd4b5574934f741fbbccd3081c6695ad8f0f8",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "icons.js",
+        "status": 200,
+        "bytes": 16947,
+        "sha256": "ed93e77e2f44cd80a7a0987f3ada0c89aab7899217308f70cb7dc30bc21d93b4",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "style.css",
+        "status": 200,
+        "bytes": 36966,
+        "sha256": "6ba206ae2114c3a879a79f8bcc55522b79534c9ddae16a79edb73e3d3496e082",
+        "matchesRelease": true,
+        "contentType": "text/css"
+      },
+      {
+        "path": "assets/favicon.svg",
+        "status": 200,
+        "bytes": 455,
+        "sha256": "4befe29dbf1917f297fd9e145bc21d563782a87faff548f623a77c507b91b584",
+        "matchesRelease": true,
+        "contentType": "image/svg+xml"
+      },
+      {
+        "path": "node_modules/three/build/three.module.js",
+        "status": 200,
+        "bytes": 603113,
+        "sha256": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "node_modules/three/build/three.core.js",
+        "status": 200,
+        "bytes": 1403455,
+        "sha256": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "node_modules/three/LICENSE",
+        "status": 200,
+        "bytes": 1081,
+        "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+        "matchesRelease": true,
+        "contentType": "application/octet-stream"
+      }
+    ]
+  },
+  "certificateRenewal": {
+    "certificateExpiresOn": "2027-01-17",
+    "evidenceSource": "root agent independently reviewed server execution log",
+    "timer": {
+      "enabled": true,
+      "active": true
+    },
+    "service": {
+      "result": "success",
+      "execMainStatus": 0
+    },
+    "nginxConfigTest": "pass",
+    "actualCertificateReplacement": "not tested; certificate is not due for renewal"
+  },
+  "browserVerification": {
+    "status": "pass",
+    "evidence": "test-results/public-v0.2-result.json",
+    "screenshot": "test-results/public-v0.2-mobile.png",
+    "browser": "Isolated bundled Google Chrome, mobile viewport emulation; not physical-device acceptance",
+    "freshStorage": true,
+    "fixtureUsed": false,
+    "certificateValidationBypassed": false,
+    "dnsOverride": "Only isolated Chromium maps fkssj.harvey-ai.xyz to 47.251.167.53; HTTPS certificate validation remains enabled.",
+    "tls": {
+      "issuer": "YE2",
+      "protocol": "TLS 1.3",
+      "subjectName": "fkssj.harvey-ai.xyz",
+      "validFrom": 1792387982,
+      "validTo": 1800163981
+    },
+    "viewportChecks": [
+      [
+        390,
+        844
+      ],
+      [
+        320,
+        568
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "pageErrorEvidence": "root agent browser QA report",
+    "requestFailures": 0,
+    "checks": [
+      {
+        "name": "fresh-browser-entry-and-3D",
+        "passed": true
+      },
+      {
+        "name": "touch-salvage-4-items-24-wood",
+        "passed": true
+      },
+      {
+        "name": "build-fishing-through-UI",
+        "passed": true
+      },
+      {
+        "name": "manual-and-auto-fishing-3-casts-12-fish",
+        "passed": true
+      },
+      {
+        "name": "auto-stops-on-exit-3300ms",
+        "passed": true
+      },
+      {
+        "name": "reload-retains-building-quests-fish",
+        "passed": true
+      },
+      {
+        "name": "390x844-320x568-844x390-no-overflow",
+        "passed": true
+      },
+      {
+        "name": "normal-console-and-module-network-zero-errors",
+        "passed": true
+      }
+    ],
+    "finalProgress": {
+      "salvageCount": 4,
+      "woodSalvaged": 24,
+      "fishingBuilt": 1,
+      "casts": 3,
+      "fish": 12,
+      "claimed": [
+        "salvage",
+        "fishing"
+      ]
+    }
+  },
+  "notes": [
+    "The first parallel pass encountered one curl 35 TLS handshake interruption; this full pass reran with transport retries and certificate verification enabled."
+  ],
+  "result": "pass",
+  "scope": "Static release integrity, HTTPS/redirect/header checks, and browser opening/fishing smoke test.",
+  "limits": [
+    "Mobile viewport emulation is not physical-device acceptance.",
+    "This public browser smoke test covers opening/fishing, not the complete 14-quest chapter.",
+    "Certificate renewal check succeeded; actual certificate replacement is not yet tested because renewal is not due.",
+    "Pinned-IP curl requests and isolated browser resolver mapping do not establish DNS propagation to all clients."
+  ]
+}

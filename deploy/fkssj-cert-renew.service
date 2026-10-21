@@ -1,0 +1,8 @@
+[Unit]
+Description=Renew the fkssj browser game TLS certificate
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/certbot/bin/certbot renew --cert-name fkssj.harvey-ai.xyz --quiet --deploy-hook "/usr/sbin/nginx -t && /usr/bin/systemctl reload nginx"

@@ -1,0 +1,10 @@
+[Unit]
+Description=Check the fkssj TLS certificate twice a day
+
+[Timer]
+OnCalendar=*-*-* 03,15:17:00
+RandomizedDelaySec=3600
+Persistent=true
+
+[Install]
+WantedBy=timers.target

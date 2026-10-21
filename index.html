@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#126b86">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="建造海上家园，招募幸存者，组建救援队，沿着航道探索沉没的世界。">
+  <title>疯狂水世界 · 漂流者营地</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./battle-view.css">
+  <link rel="stylesheet" href="./progress-ui.css">
+  <link rel="stylesheet" href="./scavenging-ui.css">
+  <link rel="stylesheet" href="./production-ui.css">
+  <link rel="stylesheet" href="./diving-ui.css">
+  <link rel="stylesheet" href="./account-ui.css">
+</head>
+<body>
+  <main id="game" aria-label="海上生存游戏">
+    <div id="world" aria-label="3D 木筏营地，拖动移动视角，点击漂流物拾荒"></div>
+    <div class="vignette"></div>
+    <header class="hud">
+      <button id="captain-button" class="captain" aria-label="查看营地信息">
+        <span class="captain-portrait" id="captain-portrait"></span>
+        <span class="captain-info"><strong>漂流者营地 <span class="level" id="level">Lv.1</span></strong><span class="xp-track"><i id="xp-fill"></i></span><small id="population">1 位居民 · 1 位空闲</small></span>
+      </button>
+      <div class="wordmark"><strong>疯狂<span>水世界</span></strong><small>O C E A N  D R I F T E R S</small></div>
+      <div class="header-tools"><span class="coin-count" id="coins"></span><button class="round-button" id="sound-button" aria-label="开启声音"></button><button class="round-button" id="settings-button" aria-label="设置"></button></div>
+    </header>
+    <button id="account-button" class="account-entry" aria-label="账号管理">游客 · 登录</button>
+    <div id="resources" class="resources" aria-label="营地资源"></div>
+    <div class="weather"><span id="weather-icon"></span><div><strong id="day-label">海上 · 第 1 天</strong><small id="weather-label">晴朗 / 东南风</small></div></div>
+    <div class="quick-tools"><button id="expand-button"><span class="tool-art" id="expand-art"></span><strong>扩建</strong></button><button id="quest-button"><span class="tool-art" id="quest-art"></span><strong>航海日志</strong><b class="notice-dot" id="quest-dot"></b></button><button id="storm-button" hidden><span class="tool-art" id="storm-art"></span><strong>风暴将至</strong></button><button id="heroes-button"><span class="tool-art" id="heroes-art"></span><strong>英雄</strong></button><button id="campaign-button"><span class="tool-art" id="campaign-art"></span><strong>闯关</strong></button></div>
+    <div class="camera-tools"><button id="zoom-in" aria-label="放大">+</button><button id="focus-button" aria-label="回到营地"></button><button id="zoom-out" aria-label="缩小">−</button></div>
+    <div class="sea-coordinate">无名海域<span>23° 16′ N &nbsp; 117° 08′ E</span></div>
+    <section id="fishing-screen" class="fishing-screen" aria-label="钓鱼" hidden>
+      <div class="fishing-heading"><span id="fishing-heading-icon"></span><div><strong id="fishing-title">海上钓鱼台</strong><small>随海浪慢一点，好鱼会来的。</small></div><b id="fishing-level">Lv.1</b></div>
+      <div id="fishing-catch" class="fishing-catch" role="status" aria-live="polite"></div>
+      <button id="fishing-claim" class="fishing-claim" data-action="fishing-claim" hidden></button>
+      <div class="fishing-controls">
+        <div id="fishing-status" class="fishing-status">风平浪静，甩一竿试试</div>
+        <div id="reel-meter" class="reel-meter" hidden><div><strong>鱼儿上钩了！</strong><span>连续点击收线</span></div><div class="reel-track"><i id="reel-fill"></i></div></div>
+        <button id="fishing-cast" class="fishing-cast" data-action="fishing-cast" aria-label="甩竿钓鱼"><span class="cast-icon"></span><strong>甩竿</strong><small>手动钓鱼</small></button>
+        <button id="fishing-production" class="fishing-production" data-action="fishing-production" hidden></button>
+        <div class="fishing-toolbar"><button data-action="fishing-exit" class="fishing-return"><span data-fish-icon="arrow"></span><strong>返回营地</strong></button><div><button data-action="fishing-upgrade"><span data-fish-icon="hammer"></span><strong>升级</strong></button><button data-action="fishing-catches"><span data-fish-icon="fish"></span><strong>渔获</strong></button><button id="fishing-auto" data-action="fishing-auto" aria-pressed="false"><span data-fish-icon="clock"></span><strong>自动</strong></button></div></div>
+      </div>
+    </section>
+    <div id="mode-banner" class="mode-banner" hidden><span id="mode-text"></span><button id="cancel-mode">取消</button></div>
+    <section class="bottom-hud">
+      <div id="tutorial-hint" class="tutorial-hint">点击海面上的木箱和漂流物，把物资捞上来</div>
+      <div id="quest-panel" class="quest-panel"></div>
+      <nav class="bottom-nav" aria-label="游戏菜单">
+        <button data-nav="camp" class="active"><span data-icon="anchor"></span><strong>营地</strong></button>
+        <button data-nav="build"><span data-icon="hammer"></span><strong>建造</strong><i class="nav-dot"></i></button>
+        <button data-nav="people"><span data-icon="people"></span><strong>居民</strong></button>
+        <button data-nav="explore"><span data-icon="compass"></span><strong>海域</strong></button>
+        <button data-nav="bag"><span data-icon="bag"></span><strong>背包</strong></button>
+      </nav>
+    </section>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <div id="float-rewards" aria-hidden="true"></div>
+    <button id="resident-demand" class="resident-demand" data-action="resident-order" aria-label="查看居民需求" hidden></button>
+    <div id="building-actions" class="building-actions" hidden></div>
+    <div id="guide-pointer" class="guide-pointer" aria-hidden="true" hidden><i></i><svg viewBox="0 0 44 52"><path d="M15 27V9c0-7 9-7 9 0v13c4-5 8-3 9 1 6-1 9 3 9 8l-3 13c-1 4-5 6-10 6h-8c-4 0-7-2-9-5L3 33c-4-5 2-10 6-6l6 6" fill="#fff9e9" stroke="#172a57" stroke-width="3" stroke-linejoin="round"/></svg></div>
+    <section id="opening-dialog" class="opening-dialog" role="dialog" aria-modal="true" aria-label="海上第一天" hidden>
+      <button class="intro-skip" data-action="intro-skip">跳过剧情 ›</button>
+      <div class="opening-caption"><small>海上 · 第一天</small><h1>陆地消失之后</h1><p>一座废弃浮台，几块漂来的木板。<br>我们的新生活，就从这里开始。</p></div>
+      <div class="opening-person" id="opening-person"></div>
+      <div class="dialogue-box"><span id="dialogue-name">阿海</span><p id="dialogue-text"></p><button data-action="intro-next" id="dialogue-next">继续 ›</button><small id="dialogue-page">1 / 3</small></div>
+    </section>
+    <div id="level-up" class="level-up" role="status" hidden></div>
+    <div id="loading"><span class="loading-island"></span><strong>正在靠近你的木筏…</strong><span>海风已经准备好了</span></div>
+    <div id="modal-root"></div>
+    <div id="progression-root" hidden></div>
+    <div id="scavenging-root" hidden></div>
+    <div id="production-root" hidden></div>
+    <div id="diving-root" hidden></div>
+    <div id="account-root" hidden></div>
+  </main>
+  <script type="module" src="./bootstrap.js"></script>
+</body>
+</html>

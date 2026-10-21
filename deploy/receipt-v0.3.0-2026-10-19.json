@@ -1,0 +1,282 @@
+{
+  "release": "fkssj-0.3.0-20261019T072040Z",
+  "version": "0.3.0",
+  "checkedAt": "2026-10-19T15:26:13+08:00",
+  "url": "https://fkssj.harvey-ai.xyz/",
+  "requestTarget": {
+    "ip": "47.251.167.53",
+    "observedRemoteIps": [
+      "47.251.167.53"
+    ],
+    "method": "serial curl --resolve with transport retries; certificate validation enabled; no -k",
+    "dnsPropagation": "not assessed by these pinned-IP requests"
+  },
+  "serverDeployment": {
+    "current": "/srv/fkssj/releases/fkssj-0.3.0-20261019T072040Z",
+    "serverFileHashesAndSizesMatch": true,
+    "evidenceSource": "root agent verified 11 files before independent public verification"
+  },
+  "httpVerification": {
+    "result": "pass",
+    "fileCount": 11,
+    "totalBytes": 2257170,
+    "allFileHashesAndSizesMatch": true,
+    "publicReleaseManifestMatches": true,
+    "releaseManifestSha256": "6f4c35f7d1efb67df3d123c52fff631ed10f9b11e97f5662d798047f6c156b9f",
+    "tlsCertificateVerified": true,
+    "javascriptMimeValid": true,
+    "cacheControl": "no-cache",
+    "xContentTypeOptions": "nosniff",
+    "httpRedirect": {
+      "status": 301,
+      "location": "https://fkssj.harvey-ai.xyz/",
+      "pass": true
+    },
+    "missingJavascript": {
+      "status": 404,
+      "pass": true
+    },
+    "files": [
+      {
+        "path": "index.html",
+        "status": 200,
+        "bytes": 6955,
+        "sha256": "70f03da8c76930ff4a78bf5c953f72ac541e9d37ac6c89379fe2b7ed4aa7e393",
+        "matchesRelease": true,
+        "contentType": "text/html"
+      },
+      {
+        "path": "bootstrap.js",
+        "status": 200,
+        "bytes": 648,
+        "sha256": "a8dd238cf8fc70a32142e4b3ca3cd9a91298d6c3e01fc05b5a763442be842065",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "app.js",
+        "status": 200,
+        "bytes": 46035,
+        "sha256": "0a42d2eb7ba2b74731f557009cb48e98c71eae560e5cd953870b5b6113f9bfb0",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "scene.js",
+        "status": 200,
+        "bytes": 86664,
+        "sha256": "1d5ecc32cfd88267bfeb2f98fa1a87b21324e4f987922c7d540a0cd6dc1e8b4e",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "game-state.js",
+        "status": 200,
+        "bytes": 38215,
+        "sha256": "c2ff66c9f92b061db8e1fe3f10a15b154cbd80f291701fd198b12fd0b25a0606",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "icons.js",
+        "status": 200,
+        "bytes": 16947,
+        "sha256": "ed93e77e2f44cd80a7a0987f3ada0c89aab7899217308f70cb7dc30bc21d93b4",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "style.css",
+        "status": 200,
+        "bytes": 53602,
+        "sha256": "a1bd76600009a05723528a5ddc124e7a699a7b8b07ca44212b5a0cb94b21fd43",
+        "matchesRelease": true,
+        "contentType": "text/css"
+      },
+      {
+        "path": "assets/favicon.svg",
+        "status": 200,
+        "bytes": 455,
+        "sha256": "4befe29dbf1917f297fd9e145bc21d563782a87faff548f623a77c507b91b584",
+        "matchesRelease": true,
+        "contentType": "image/svg+xml"
+      },
+      {
+        "path": "node_modules/three/build/three.module.js",
+        "status": 200,
+        "bytes": 603113,
+        "sha256": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "node_modules/three/build/three.core.js",
+        "status": 200,
+        "bytes": 1403455,
+        "sha256": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
+        "matchesRelease": true,
+        "contentType": "application/javascript"
+      },
+      {
+        "path": "node_modules/three/LICENSE",
+        "status": 200,
+        "bytes": 1081,
+        "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+        "matchesRelease": true,
+        "contentType": "application/octet-stream"
+      }
+    ]
+  },
+  "domainVerification": {
+    "result": "pass",
+    "testCount": 14,
+    "command": "node --test game-state.test.mjs",
+    "note": "Includes the complete 14-quest domain path and resident-order/save compatibility tests."
+  },
+  "localBrowserVerification": {
+    "result": "pass",
+    "evidence": "test-results/v0.3-qa/results.json",
+    "scenarioCount": 13,
+    "browser": "Isolated Google Chrome, mobile viewport emulation",
+    "physicalDeviceAcceptance": false,
+    "freshFullFlowViewport": [
+      390,
+      844
+    ],
+    "responsiveViewports": [
+      [
+        320,
+        568
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "responsiveFixtureNotes": "Camp uses the unmodified actual 390x844 UI-earned first-meal save; fishing uses an actual v0.2 save with fishing already built. Fixture savedAt is refreshed only to exclude unrelated offline accrual.",
+    "background": {
+      "runtimeTested": false,
+      "codeReviewed": true,
+      "reason": "Isolated test Chrome does not expose actual document.hidden after changing tabs or minimizing. No visibility state was overridden."
+    },
+    "fixedRegression": {
+      "description": "UI and handler cooldown thresholds were inconsistent at the completion boundary.",
+      "status": "Root repaired thresholds and tick ordering. Final regression used actual enabled buttons with no added boundary wait; two consecutive catches passed."
+    },
+    "scenarios": [
+      {
+        "name": "fresh-390x844",
+        "passed": true
+      },
+      {
+        "name": "legacy-existing",
+        "passed": true
+      },
+      {
+        "name": "legacy-food-claimed",
+        "passed": true
+      },
+      {
+        "name": "invalid-invalid-json-txt",
+        "passed": true
+      },
+      {
+        "name": "invalid-future-version-json",
+        "passed": true
+      },
+      {
+        "name": "invalid-incomplete-save-json",
+        "passed": true
+      },
+      {
+        "name": "latest-fishing-two-consecutive-catches",
+        "passed": true
+      },
+      {
+        "name": "fresh-opening-320x568",
+        "passed": true
+      },
+      {
+        "name": "earned-first-meal-responsive-320x568",
+        "passed": true
+      },
+      {
+        "name": "legacy-fishing-responsive-320x568",
+        "passed": true
+      },
+      {
+        "name": "fresh-opening-844x390",
+        "passed": true
+      },
+      {
+        "name": "earned-first-meal-responsive-844x390",
+        "passed": true
+      },
+      {
+        "name": "legacy-fishing-responsive-844x390",
+        "passed": true
+      }
+    ]
+  },
+  "publicBrowserVerification": {
+    "result": "pass",
+    "evidence": "test-results/public-v0.3-result.json",
+    "screenshot": "test-results/public-v0.3-mobile.png",
+    "finishedAt": "2026-10-19T07:26:22.647Z",
+    "browser": "Isolated Google Chrome, touch/mobile viewport emulation",
+    "viewport": [
+      390,
+      844
+    ],
+    "physicalDeviceAcceptance": false,
+    "freshStorage": true,
+    "fixtureUsed": false,
+    "certificateValidationBypassed": false,
+    "dnsOverride": "Isolated browser maps fkssj.harvey-ai.xyz to 47.251.167.53. Normal HTTPS hostname and certificate verification remains enabled.",
+    "certificate": {
+      "issuer": "YE2",
+      "protocol": "TLS 1.3",
+      "subjectName": "fkssj.harvey-ai.xyz",
+      "validFrom": 1792387982,
+      "validTo": 1800163981
+    },
+    "httpStatus": 200,
+    "checks": [
+      "First HTTPS navigation loads 3D and fresh opening without retry UI",
+      "Opening can be skipped and records introSeen",
+      "Guide-projected real touch gathers 15+ wood and claims first task",
+      "Build fishing through UI, claim, open floating actions and enter fishing",
+      "Waiting credits no fish; four reeling taps complete exactly one catch",
+      "Reload keeps fish, completed casts, building and task claims; opening does not repeat"
+    ],
+    "errors": 0,
+    "failedRequests": 0,
+    "httpErrorResponses": 0,
+    "loadedSourceHashCount": 7,
+    "allLoadedSourceHashesMatchRelease": true,
+    "biteDelayMs": 1115,
+    "catch": {
+      "completed": 1,
+      "fishAdded": 3,
+      "taps": 4
+    },
+    "layout": {
+      "viewport": [
+        390,
+        844
+      ],
+      "scroll": [
+        390,
+        844
+      ]
+    }
+  },
+  "limits": [
+    "Mobile viewport emulation is not physical-device acceptance.",
+    "Background cancellation was code-reviewed, not runtime-tested; no visibility override was used.",
+    "The public smoke test covers opening and one completed catch; the first-meal UI path was verified locally, and the complete 14-quest path in domain tests.",
+    "Pinned-IP curl requests and isolated browser resolver mapping do not establish DNS propagation to all clients."
+  ],
+  "result": "pass",
+  "scope": "0.3.0 release integrity, HTTPS transport/headers, local integration scenarios and public opening/fishing smoke test."
+}

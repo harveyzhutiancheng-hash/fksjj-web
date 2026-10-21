@@ -1,0 +1,94 @@
+.account-root{position:fixed;inset:var(--account-viewport-top,0px) 0 auto;z-index:150;height:var(--account-viewport-height,100dvh);color:#34365e;font-family:"PingFang SC","Microsoft YaHei",sans-serif;isolation:isolate;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.account-root[hidden],.account-root [hidden]{display:none!important}
+.account-root *{box-sizing:border-box}
+.account-shade{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:clamp(10px,3vh,26px) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:#111c40ba;backdrop-filter:blur(5px);overflow:hidden}
+.account-window{width:min(100%,440px);max-height:100%;display:flex;flex-direction:column;overflow:hidden;border:3px solid #262554;border-radius:12px;background:#f3efdc;box-shadow:0 6px 0 #131b3b66,0 18px 70px #07152b66;animation:account-arrive .18s ease-out;outline:none}
+.account-header{display:flex;align-items:center;gap:11px;flex-shrink:0;padding:13px 15px;background:linear-gradient(#56528c,#38366e);border-bottom:3px solid #282754;color:#fff8df}
+.account-emblem{display:grid;place-items:center;width:48px;height:48px;flex-shrink:0;border:2px solid #e6c876;border-radius:10px;background:#353c65;box-shadow:inset 0 0 0 2px #797299}
+.account-emblem svg{width:39px;height:39px}
+.account-header>div{flex:1;min-width:0}
+.account-header small{display:block;font-size:10px;letter-spacing:2px;color:#dddaed;margin-bottom:4px}
+.account-header h2{font-size:21px;line-height:1.1;margin:0;text-shadow:0 2px #252447}
+.account-close{display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;border:2px solid #302853;border-radius:7px;background:linear-gradient(#ffa8ae,#e9748b);color:#fff;box-shadow:0 2px #242242;cursor:pointer}
+.account-close svg{width:27px;height:27px}
+.account-status{display:flex;gap:10px;align-items:flex-start;flex-shrink:0;padding:12px 17px;background:#dddff0;border-bottom:1px solid #b9bfd6}
+.account-status-dot{width:10px;height:10px;flex-shrink:0;margin-top:4px;border:2px solid #666990;border-radius:50%;background:#9ba6bc;box-shadow:0 0 0 3px #f6f5ff9c}
+.account-status strong{font-size:13px;color:#3f426c}
+.account-status p{font-size:11px;line-height:1.55;font-weight:500;color:#68718d;margin:3px 0 0;overflow-wrap:anywhere}
+.account-root[data-phase="synced"] .account-status-dot{border-color:#367c70;background:#70bc9b}
+.account-root[data-phase="pending"] .account-status-dot,.account-root[data-phase="checking"] .account-status-dot{border-color:#a47f38;background:#f4cd69}
+.account-root[data-phase="conflict"] .account-status-dot,.account-root[data-phase="expired"] .account-status-dot,.account-root[data-phase="error"] .account-status-dot{border-color:#a65a60;background:#e38d85}
+.account-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;padding:16px 18px 18px;scroll-padding:12px}
+.account-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border:1px solid #b7b7cf;border-radius:7px;background:#d4d7e5;margin-bottom:16px}
+.account-tabs button{min-height:39px;border:1px solid transparent;border-radius:4px;background:transparent;color:#72738e;font:700 13px inherit;cursor:pointer}
+.account-tabs button.selected{background:#5e5b91;border-color:#3b3b6e;box-shadow:inset 0 1px #9c96bd,0 1px #bfc4d3;color:#fff8df}
+.account-form{display:flex;flex-direction:column;gap:12px;margin:0}
+.account-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.account-field>span{font-size:12px;font-weight:800;color:#4e4b6d}
+.account-field input{display:block;width:100%;min-height:45px;border:2px solid #a2abc5;border-radius:6px;background:#fffdf4;color:#30344f;box-shadow:inset 0 2px 2px #323d5820;padding:9px 11px;font:500 16px/1.35 "PingFang SC","Microsoft YaHei",sans-serif;outline:none;letter-spacing:.2px}
+.account-field input:focus{border-color:#6d75a8;box-shadow:0 0 0 3px #778bc22b,inset 0 1px 2px #323d5815}
+.account-field input[aria-invalid="true"]{border-color:#c97670;background:#fff4ed}
+.account-field small{font-size:10px;font-weight:500;color:#7e8093;line-height:1.4}
+.account-check{display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px;font-weight:600;line-height:1.5;color:#535d78}
+.account-check input{width:18px;height:18px;flex:0 0 18px;margin:0;accent-color:#6a659b;cursor:pointer}
+.account-check small{display:block;font-size:10px;font-weight:500;color:#7b8195;line-height:1.5;margin-top:2px}
+.account-show-password{align-items:center;font-size:11px;font-weight:500;margin-top:-2px}
+.account-import{padding:11px;border:1px solid #cfccb6;border-radius:6px;background:#e8e6d5;margin-top:2px}
+.account-form-note{font-size:11px;line-height:1.7;color:#7a7d8d;margin:0;font-weight:500}
+.account-expired-note{padding:10px 12px;border-left:3px solid #bd8a69;background:#efe0c9;border-radius:2px;font-size:12px;line-height:1.6;color:#83664e;margin:0 0 15px}
+.account-profile{display:flex;gap:13px;align-items:center;padding:1px 0 17px}
+.account-captain{display:grid;place-items:center;width:64px;height:64px;flex-shrink:0;border:2px solid #8a90b1;border-radius:10px;background:linear-gradient(#e6dfc4,#c9d6d1);box-shadow:inset 0 0 0 3px #f8f2db}
+.account-captain svg{width:48px;height:48px}
+.account-profile>div:last-child{min-width:0}
+.account-profile small{font-size:11px;color:#7e7c8c}
+.account-profile h3{font-size:22px;color:#44416d;margin:4px 0;line-height:1.25;overflow-wrap:anywhere}
+.account-profile p{font-size:11px;font-weight:500;color:#86818d;line-height:1.5;margin:0}
+.account-save-time{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px dashed #c9c6b9;border-bottom:1px dashed #c9c6b9;margin:0;padding:12px 0;font-size:11px;line-height:1.6}
+.account-save-time dt{color:#86818b;font-weight:500}
+.account-save-time dd{margin:0;text-align:right;color:#565a77;font-variant-numeric:tabular-nums;font-weight:700}
+.account-conflict{margin-top:18px}
+.account-conflict h3{font-size:16px;line-height:1.4;margin:0 0 8px;color:#49456b}
+.account-conflict p{font-size:12px;line-height:1.8;font-weight:500;color:#7d7888;margin:0 0 14px}
+.account-conflict strong{font-weight:800;color:#66627a}
+.account-conflict .account-button{width:100%;margin-top:10px}
+.account-button{min-height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 13px;border:2px solid #44406b;border-radius:6px;font-family:inherit;font-size:14px;font-weight:800;line-height:1.35;cursor:pointer;touch-action:manipulation;text-align:center}
+.account-button small{display:block;font-size:10px;font-weight:500;line-height:1.5}
+.account-primary{background:linear-gradient(#ffdc81,#e7ae49);border-color:#776046;box-shadow:0 3px #544260,inset 0 2px #fff0b3;color:#624827;text-shadow:0 1px #ffe9a9}
+.account-primary:hover:not(:disabled){filter:brightness(1.04)}
+.account-secondary{background:#d4d7e7;color:#555c7e;border-color:#9a9fbd;box-shadow:0 2px #9298b5}
+.account-cloud-choice{background:linear-gradient(#769bc9,#5c7eaf);color:#fff9e6;box-shadow:0 3px #43476a,inset 0 1px #b2c9df}
+.account-cloud-choice strong{color:#fff9e6}
+.account-cloud-choice small{color:#dbe6f1}
+.account-local-choice{background:#eee0c3;border-color:#b7a183;box-shadow:0 2px #c8b69c;color:#7c6251}
+.account-local-choice strong{color:#80624e}
+.account-review{padding:14px;border:2px solid #c0a177;border-radius:8px;background:#f3e4c5;text-align:center}
+.account-review-icon{display:inline-block;width:44px;height:44px;margin-bottom:6px}
+.account-review-icon svg{width:100%;height:100%}
+.account-review dl{padding:10px;border:1px dashed #c1aa89;border-radius:4px;background:#f9f0db;margin:10px 0;font-size:11px;line-height:1.6;color:#8b7463}
+.account-review dd{margin:2px 0 0;font-weight:800;color:#705e58}
+.account-review .account-review-note{font-size:11px;line-height:1.7;color:#8b7669;margin:11px 0 0}
+.account-danger{background:linear-gradient(#db9d87,#c47e71);border-color:#96675e;box-shadow:0 3px #956c68;color:#fff8ec}
+.account-error{margin:13px 0 0;border:1px solid #dcaaa1;border-left:3px solid #bb6b66;border-radius:4px;background:#f7e2d8;color:#964e4f;font-size:12px;font-weight:600;line-height:1.7;padding:9px 11px;overflow-wrap:anywhere}
+.account-footer{display:flex;align-items:stretch;gap:9px;flex-shrink:0;padding:13px 17px 16px;border-top:2px solid #bab8c8;background:#d6d5e2}
+.account-footer .account-primary{flex:1}
+.account-footer .account-secondary{min-width:96px;font-size:12px}
+.account-footer-single>.account-button{width:100%;flex:1}
+.account-root button:disabled,.account-root input:disabled{cursor:default;opacity:.6}
+.account-root button:focus-visible,.account-root input[type="checkbox"]:focus-visible{outline:3px solid #8799c5;outline-offset:3px}
+.account-root button:active:not(:disabled){transform:translateY(1px);box-shadow:none}
+.account-view #toast{z-index:170}
+@keyframes account-arrive{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
+@media(max-width:350px){.account-shade{padding:9px}.account-window{border-radius:9px}.account-header{padding:10px 12px;gap:9px}.account-emblem{width:41px;height:41px}.account-emblem svg{width:34px;height:34px}.account-header h2{font-size:19px}.account-body{padding:13px 13px 15px}.account-status{padding:10px 13px}.account-status p{font-size:10px}.account-form{gap:10px}.account-tabs{margin-bottom:13px}.account-import{padding:9px}.account-footer{padding:11px 12px 13px}.account-button{font-size:13px}.account-profile h3{font-size:20px}}
+@media(orientation:landscape) and (max-height:540px){.account-shade{padding:8px max(12px,env(safe-area-inset-right))}.account-window{width:min(100%,630px)}.account-header{padding:7px 12px;gap:9px}.account-header small{display:none}.account-header h2{font-size:18px}.account-emblem{width:35px;height:35px}.account-emblem svg{width:29px;height:29px}.account-close{width:37px;height:37px}.account-status{padding:7px 13px}.account-status p{margin-top:1px;font-size:10px}.account-body{padding:11px 15px 13px}.account-form{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}.account-tabs{margin-bottom:11px}.account-form .account-import,.account-form .account-form-note{grid-column:1/-1}.account-field input{min-height:42px}.account-check{font-size:11px}.account-import{margin-top:0;padding:8px}.account-footer{padding:8px 13px 10px}.account-button{min-height:42px;padding:8px 12px}.account-profile{padding-bottom:10px}.account-conflict{margin-top:10px}.account-conflict p{margin-bottom:9px}.account-review{padding:10px}.account-review-icon{display:none}}
+.account-root[data-compact="true"] .account-header{padding:6px 11px;gap:8px}
+.account-root[data-compact="true"] .account-header small{display:none}
+.account-root[data-compact="true"] .account-header h2{font-size:18px}
+.account-root[data-compact="true"] .account-emblem{width:34px;height:34px}
+.account-root[data-compact="true"] .account-emblem svg{width:28px;height:28px}
+.account-root[data-compact="true"] .account-close{height:36px;width:36px}
+.account-root[data-compact="true"] .account-status{padding:7px 12px}
+.account-root[data-compact="true"] .account-status p{display:none}
+.account-root[data-compact="true"] .account-body{padding:10px 13px 12px}
+.account-root[data-compact="true"] .account-footer{padding:8px 12px 10px}
+.account-root[data-compact="true"] .account-button{min-height:42px;padding:8px 11px}
+@media(prefers-reduced-motion:reduce){.account-window{animation:none}}

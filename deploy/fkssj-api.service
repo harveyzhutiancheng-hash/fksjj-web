@@ -1,0 +1,30 @@
+[Unit]
+Description=Ocean Drifters account and cloud save API
+After=network.target
+
+[Service]
+Type=simple
+User=fkssj
+Group=fkssj
+WorkingDirectory=/srv/fkssj/api-current
+Environment=FKSSJ_DATA_DIR=/var/lib/fkssj
+Environment=FKSSJ_WEB_ROOT=/srv/fkssj/current
+Environment=FKSSJ_PUBLIC_ORIGIN=https://fkssj.harvey-ai.xyz
+Environment=FKSSJ_TRUSTED_PROXIES=127.0.0.1,::1
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/srv/fkssj/venv/bin/gunicorn --bind 127.0.0.1:8787 --workers 2 --worker-class sync --timeout 30 --error-logfile - api.app:create_app()
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/fkssj
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target

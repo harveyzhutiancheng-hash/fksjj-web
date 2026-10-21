@@ -1,0 +1,228 @@
+{
+  "version": "0.12.0",
+  "release": "fkssj-0.12.0-20261020T044803Z",
+  "checkedAt": "2026-10-20T04:58:16.342809+00:00",
+  "url": "https://fkssj.harvey-ai.xyz/",
+  "deployment": {
+    "release": "fkssj-0.12.0-20261020T044803Z",
+    "version": "0.12.0",
+    "previous": "releases/fkssj-0.11.0-20261020T031345Z",
+    "current": "releases/fkssj-0.12.0-20261020T044803Z",
+    "atomicSwitch": true,
+    "serverHashesMatch": true,
+    "fileCount": 29,
+    "totalBytes": 2676751
+  },
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 7569,
+      "sha256": "6a57638bec807fb44667bc3fd79d46930f07e0629bb3e2a9a24a5f7f3b8c7e88"
+    },
+    {
+      "path": "bootstrap.js",
+      "bytes": 648,
+      "sha256": "a8dd238cf8fc70a32142e4b3ca3cd9a91298d6c3e01fc05b5a763442be842065"
+    },
+    {
+      "path": "app.js",
+      "bytes": 64104,
+      "sha256": "3fa493450d9706e3b9c426b893f69aecff1c1e58cb1c28e3764816704c1c9613"
+    },
+    {
+      "path": "scene.js",
+      "bytes": 113165,
+      "sha256": "dc5b65de1819b85e6a4f66abaf86e692fe4d7f45cfc872ab9d73ae4a205af586"
+    },
+    {
+      "path": "game-state.js",
+      "bytes": 61276,
+      "sha256": "a868cc8243588b05e5a1d38cdc35bc7c8f90c9f1d7a582ea0ab63f167b8ad835"
+    },
+    {
+      "path": "progress-state.js",
+      "bytes": 36238,
+      "sha256": "08fbf95bb66017b1962402eaa7fc56e93b2d76617da73d4b6b04299baa4fbd76"
+    },
+    {
+      "path": "progress-ui.js",
+      "bytes": 27401,
+      "sha256": "a24ac4a410e69a1bf1704691b39695559b57ca76579a44ddcb88dd3d14f4c683"
+    },
+    {
+      "path": "progress-ui.css",
+      "bytes": 32496,
+      "sha256": "9f845cf1479e04c0a4f06f4d9973b3e1500c360d2fd410f98e9948117c252f5e"
+    },
+    {
+      "path": "battle-view.js",
+      "bytes": 37590,
+      "sha256": "1aa133cc10a6341793ee36ff4ae49dc3854e6802558987cab0a7c9bc1734328c"
+    },
+    {
+      "path": "campaign-view.js",
+      "bytes": 20691,
+      "sha256": "98dd0beb6c33daf16885cfa8b88d36c0749fb365098a51f09b5454ad23573017"
+    },
+    {
+      "path": "scavenging-state.js",
+      "bytes": 21014,
+      "sha256": "7c3f298d78a301e8db7e182e2fcc3d4b10c5da38314ec622d53ead0a7bfdc887"
+    },
+    {
+      "path": "scavenging-view.js",
+      "bytes": 30870,
+      "sha256": "8785669cd722fadf06583e45494d558359f43d7d582574149b3b338218721aa8"
+    },
+    {
+      "path": "scavenging-ui.js",
+      "bytes": 17834,
+      "sha256": "0a4d4032463aa967d34693b665d53b3948a4b24d24d9659535cdfc704a077b74"
+    },
+    {
+      "path": "scavenging-ui.css",
+      "bytes": 14394,
+      "sha256": "1e4204eca56f7c1158f4c28a4e5b6040d42694fe5d74be72d5ae8773bad73ca4"
+    },
+    {
+      "path": "production-state.js",
+      "bytes": 19741,
+      "sha256": "ce4154ebe90a5cd91aec40fa399204a5540c97133921fbccfd5207ee9fc8c233"
+    },
+    {
+      "path": "production-ui.js",
+      "bytes": 12285,
+      "sha256": "59f3a129b08929e1e5bd51b0d54666e15046660906e11ccba28a3a1fa287909b"
+    },
+    {
+      "path": "production-ui.css",
+      "bytes": 11552,
+      "sha256": "b7d4b567d64634d4dbcdf53ed7872ca055575ba43edf198c231cb6133f523b6a"
+    },
+    {
+      "path": "story-state.js",
+      "bytes": 20048,
+      "sha256": "0110012bce4f7e681bf895d17190606dc7c1f5e857b4d1aa987c0f6df70f1cb0"
+    },
+    {
+      "path": "diving-state.js",
+      "bytes": 10986,
+      "sha256": "54034f915568a46407e0e151be29dcc144bae86e04ff3e4f8527f032f8861c03"
+    },
+    {
+      "path": "diving-view.js",
+      "bytes": 7819,
+      "sha256": "a1bc6f34880ffa892341b710d3c41c986f74e6fab4e056c71d0569dd1001f1a8"
+    },
+    {
+      "path": "diving-ui.js",
+      "bytes": 9755,
+      "sha256": "33ae9c093b693e96a16e8632c2bf8d7483f8c916c6195b8dcf624913fb2872bd"
+    },
+    {
+      "path": "diving-ui.css",
+      "bytes": 6404,
+      "sha256": "54311a0078ce9ef597b8d8b62902fa7b041e0138b9e749300bc732d91c331b9f"
+    },
+    {
+      "path": "battle-view.css",
+      "bytes": 4997,
+      "sha256": "05c285280b3611e99ee06d81a90da7d41b944be792fa6a2fade3d927b3e60d6f"
+    },
+    {
+      "path": "icons.js",
+      "bytes": 23910,
+      "sha256": "426dedfc953563acb4ab3023066fc31b10d916907c358e718064b8fa10b26d04"
+    },
+    {
+      "path": "style.css",
+      "bytes": 55860,
+      "sha256": "54d4c90da3b96d1198fc9f84d1d66a0b03ddfb2b9d7919e86ec4be89cb771ecb"
+    },
+    {
+      "path": "assets/favicon.svg",
+      "bytes": 455,
+      "sha256": "4befe29dbf1917f297fd9e145bc21d563782a87faff548f623a77c507b91b584"
+    },
+    {
+      "path": "node_modules/three/build/three.module.js",
+      "bytes": 603113,
+      "sha256": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a"
+    },
+    {
+      "path": "node_modules/three/build/three.core.js",
+      "bytes": 1403455,
+      "sha256": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20"
+    },
+    {
+      "path": "node_modules/three/LICENSE",
+      "bytes": 1081,
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+    }
+  ],
+  "publicFiles": {
+    "report": "test-results/public-v0.12-files.json",
+    "fileCount": 29,
+    "totalBytes": 2676751,
+    "normalTLS": true,
+    "redirect": {
+      "status": 301,
+      "location": "https://fkssj.harvey-ai.xyz/"
+    },
+    "missingJsStatus": 404
+  },
+  "validation": {
+    "domain": {
+      "tests": 93,
+      "passed": 93,
+      "failed": 0,
+      "report": "test-results/v0.12-qa/domain.tap"
+    },
+    "publicBrowser": {
+      "public-fresh": {
+        "path": "test-results/v0.12-qa/public-fresh.json",
+        "passed": true,
+        "checks": 6
+      },
+      "public-middle": {
+        "path": "test-results/v0.12-qa/public-middle.json",
+        "passed": true,
+        "checks": 7
+      },
+      "public-orders": {
+        "path": "test-results/v0.12-qa/public-orders.json",
+        "passed": true,
+        "checks": 4
+      },
+      "public-routing": {
+        "path": "test-results/v0.12-qa/public-routing.json",
+        "passed": true,
+        "checks": 5
+      }
+    },
+    "physicalDeviceAcceptance": false,
+    "naturalEconomyAcceptance": false,
+    "productionTime": "Controlled savedAt offline reconciliation; not full natural waiting",
+    "frontendBuildRun": false,
+    "gitCommitOrPush": false
+  },
+  "scope": {
+    "newStoryNodes": 6,
+    "totalStoryNodes": 20,
+    "newResidentOrders": 6,
+    "totalResidentOrders": 10,
+    "uniqueReachableResidentDemands": 11,
+    "newOrderReward": {
+      "coin": 915,
+      "experience": 245
+    },
+    "knownOriginalDemandMilestonesNotMounted": [
+      12,
+      15,
+      24
+    ]
+  },
+  "evidence": "test-results/v0.12-qa/research/manifest.json",
+  "references": "docs/reference-v0.12.md",
+  "validationDocument": "docs/validation-v0.12.0.md"
+}

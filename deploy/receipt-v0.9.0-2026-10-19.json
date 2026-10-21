@@ -1,0 +1,230 @@
+{
+  "version": "0.9.0",
+  "release": "fkssj-0.9.0-20261019T112413Z",
+  "checkedAt": "2026-10-19T11:32:44.824894+00:00",
+  "url": "https://fkssj.harvey-ai.xyz/",
+  "deployment": {
+    "release": "fkssj-0.9.0-20261019T112413Z",
+    "version": "0.9.0",
+    "previous": "releases/fkssj-0.8.0-20261019T103456Z",
+    "current": "releases/fkssj-0.9.0-20261019T112413Z",
+    "atomicSwitch": true,
+    "serverHashesMatch": true,
+    "fileCount": 29,
+    "totalBytes": 2632866
+  },
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 7569,
+      "sha256": "6a57638bec807fb44667bc3fd79d46930f07e0629bb3e2a9a24a5f7f3b8c7e88"
+    },
+    {
+      "path": "bootstrap.js",
+      "bytes": 648,
+      "sha256": "a8dd238cf8fc70a32142e4b3ca3cd9a91298d6c3e01fc05b5a763442be842065"
+    },
+    {
+      "path": "app.js",
+      "bytes": 57224,
+      "sha256": "4f61b31d96f92ad9765a215e6fc305b1d5d0e4225bbb205c37f2da5629d775f5"
+    },
+    {
+      "path": "scene.js",
+      "bytes": 105990,
+      "sha256": "49c9c13c46a373c026be10a27489b9ff03556bc004562242605626a19c55cf8f"
+    },
+    {
+      "path": "game-state.js",
+      "bytes": 47338,
+      "sha256": "51993bd433555257ef121c929f885637c3755dc7b274cc8389d9933833b19cd2"
+    },
+    {
+      "path": "progress-state.js",
+      "bytes": 36238,
+      "sha256": "08fbf95bb66017b1962402eaa7fc56e93b2d76617da73d4b6b04299baa4fbd76"
+    },
+    {
+      "path": "progress-ui.js",
+      "bytes": 27401,
+      "sha256": "a24ac4a410e69a1bf1704691b39695559b57ca76579a44ddcb88dd3d14f4c683"
+    },
+    {
+      "path": "progress-ui.css",
+      "bytes": 32496,
+      "sha256": "9f845cf1479e04c0a4f06f4d9973b3e1500c360d2fd410f98e9948117c252f5e"
+    },
+    {
+      "path": "battle-view.js",
+      "bytes": 37590,
+      "sha256": "1aa133cc10a6341793ee36ff4ae49dc3854e6802558987cab0a7c9bc1734328c"
+    },
+    {
+      "path": "campaign-view.js",
+      "bytes": 20691,
+      "sha256": "98dd0beb6c33daf16885cfa8b88d36c0749fb365098a51f09b5454ad23573017"
+    },
+    {
+      "path": "scavenging-state.js",
+      "bytes": 21014,
+      "sha256": "7c3f298d78a301e8db7e182e2fcc3d4b10c5da38314ec622d53ead0a7bfdc887"
+    },
+    {
+      "path": "scavenging-view.js",
+      "bytes": 30870,
+      "sha256": "8785669cd722fadf06583e45494d558359f43d7d582574149b3b338218721aa8"
+    },
+    {
+      "path": "scavenging-ui.js",
+      "bytes": 17834,
+      "sha256": "0a4d4032463aa967d34693b665d53b3948a4b24d24d9659535cdfc704a077b74"
+    },
+    {
+      "path": "scavenging-ui.css",
+      "bytes": 14394,
+      "sha256": "1e4204eca56f7c1158f4c28a4e5b6040d42694fe5d74be72d5ae8773bad73ca4"
+    },
+    {
+      "path": "production-state.js",
+      "bytes": 18729,
+      "sha256": "cbdd62548bc3007416ad5982d9895f9d320b7605fce1b5c84711af545a131917"
+    },
+    {
+      "path": "production-ui.js",
+      "bytes": 11315,
+      "sha256": "ef609aef52c844bb2e7ed61d0c11b5555ce9f1f26522adb109c52dcd0d86a767"
+    },
+    {
+      "path": "production-ui.css",
+      "bytes": 10799,
+      "sha256": "4cefc435c3a264a6ddf5e34bf30c4fc945c89e424cc2301119c323ad0c1b85f8"
+    },
+    {
+      "path": "story-state.js",
+      "bytes": 10156,
+      "sha256": "acd4b26a6e7329b8aca345e84d2c1610909d3cbfb04480c4e099ed8e504ef54e"
+    },
+    {
+      "path": "diving-state.js",
+      "bytes": 10891,
+      "sha256": "802d8b825c952ca7ca5a024d3549a0bbafc70536a2079a4dcdb389ce84129db8"
+    },
+    {
+      "path": "diving-view.js",
+      "bytes": 7819,
+      "sha256": "a1bc6f34880ffa892341b710d3c41c986f74e6fab4e056c71d0569dd1001f1a8"
+    },
+    {
+      "path": "diving-ui.js",
+      "bytes": 9755,
+      "sha256": "33ae9c093b693e96a16e8632c2bf8d7483f8c916c6195b8dcf624913fb2872bd"
+    },
+    {
+      "path": "diving-ui.css",
+      "bytes": 6404,
+      "sha256": "54311a0078ce9ef597b8d8b62902fa7b041e0138b9e749300bc732d91c331b9f"
+    },
+    {
+      "path": "battle-view.css",
+      "bytes": 4997,
+      "sha256": "05c285280b3611e99ee06d81a90da7d41b944be792fa6a2fade3d927b3e60d6f"
+    },
+    {
+      "path": "icons.js",
+      "bytes": 22706,
+      "sha256": "dbc990b5c5bc73240c12d57ec2f6c914e2b6bf92d58d7bf283d74e49e2443412"
+    },
+    {
+      "path": "style.css",
+      "bytes": 53894,
+      "sha256": "c460081e954f20a7e55368a5bd6e1f1dbb52fa84491b35481fed3f3f4a8a26e6"
+    },
+    {
+      "path": "assets/favicon.svg",
+      "bytes": 455,
+      "sha256": "4befe29dbf1917f297fd9e145bc21d563782a87faff548f623a77c507b91b584"
+    },
+    {
+      "path": "node_modules/three/build/three.module.js",
+      "bytes": 603113,
+      "sha256": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a"
+    },
+    {
+      "path": "node_modules/three/build/three.core.js",
+      "bytes": 1403455,
+      "sha256": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20"
+    },
+    {
+      "path": "node_modules/three/LICENSE",
+      "bytes": 1081,
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+    }
+  ],
+  "totalBytes": 2632866,
+  "fileCount": 29,
+  "staticSourceCopy": true,
+  "frontendBuildRun": false,
+  "domainTests": {
+    "passed": 71,
+    "failed": 0,
+    "report": "test-results/v0.9-qa/domain.tap",
+    "openingAndStoryReachability": "Public domain actions complete 14 opening tasks plus 11 story checkpoints; simulation clock advances, not natural end-to-end wall time."
+  },
+  "httpVerification": {
+    "passed": true,
+    "report": "test-results/public-v0.9-files.json",
+    "certificateValidationBypassed": false,
+    "dnsOverride": "47.251.167.53 with normal TLS hostname/certificate validation",
+    "redirect": {
+      "status": 301,
+      "location": "https://fkssj.harvey-ai.xyz/"
+    },
+    "missingJsStatus": 404
+  },
+  "publicFresh": {
+    "checks": 6,
+    "loadedSourceFiles": 25,
+    "firstReadyMs": 6596,
+    "passed": true,
+    "report": "test-results/v0.9-qa/public-fresh.json"
+  },
+  "browserChain": {
+    "local": "test-results/v0.9-qa/local-chain.json",
+    "localChecks": 12,
+    "public": "test-results/v0.9-qa/public-chain.json",
+    "publicChecks": 11,
+    "earnedSetupFixture": "test-results/v0.9-qa/earned-before-broadcast.json",
+    "fixtureProvenance": "test-results/v0.9-qa/earned-fixture-provenance.json",
+    "naturalOxygenWallMs": 60339,
+    "juiceTiming": "1200-second paid job; completion verified through controlled offline timestamp, not natural twenty-minute wait"
+  },
+  "additionalUI": {
+    "missingMaterialsAndBatch": "test-results/v0.9-qa/production-route.json",
+    "threeSizes": [
+      [
+        390,
+        844
+      ],
+      [
+        320,
+        568
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "models": "test-results/v0.9-qa/models.json",
+    "divingRendererLifecycle": "test-results/v0.9-qa/diving-lifecycle.json"
+  },
+  "physicalDeviceAcceptance": false,
+  "reference": "docs/reference-v0.9.md",
+  "limits": [
+    "Public recording channel is not independently verified as Douyin.",
+    "Broadcast blue-icon requirement 5, dock cost and kitchen upgrade cost remain unverified; exact compatibility values are documented.",
+    "The eleven story checkpoints bridge known gaps, including hospital/daily-goods tasks; not the complete original quest chain.",
+    "Diving map, pickup amounts, return protection and pause recovery remain project rules.",
+    "First named hero, 200-draw selector and repeat daily free draws are not implemented.",
+    "Production v3 and new story/diving saves are protected from older clients; preserve raw saves before downgrade."
+  ]
+}

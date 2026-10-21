@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily Ocean Drifters database snapshot
+
+[Timer]
+OnCalendar=*-*-* 04:20:00 UTC
+RandomizedDelaySec=600
+Persistent=true
+Unit=fkssj-backup.service
+
+[Install]
+WantedBy=timers.target
