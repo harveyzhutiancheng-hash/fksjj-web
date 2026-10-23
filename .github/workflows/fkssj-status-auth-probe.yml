@@ -1,0 +1,95 @@
+name: FKSSJ status-only HMAC verification
+
+# Prepared locally only. Committing/pushing and dispatching require approval.
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: Full approved main commit; must equal this workflow SHA
+        required: true
+        type: string
+      log_review:
+        description: Fresh safe JSON from the read-only nginx log audit (within 30 minutes)
+        required: true
+        type: string
+      logs_current:
+        description: Confirm audited disk files are the currently loaded logging configuration, with no changes since review
+        required: true
+        default: false
+        type: boolean
+
+permissions: {}
+concurrency:
+  group: fkssj-status-auth-probe
+  cancel-in-progress: false
+
+jobs:
+  auth-probe:
+    if: >-
+      github.repository == 'harveyzhutiancheng-hash/fksjj-web' &&
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    environment: fkssj-release-receive
+    permissions:
+      contents: read
+    steps:
+      - name: Require the exact approved main source (no release secret)
+        env:
+          INPUT_COMMIT: ${{ inputs.commit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, re
+          value = os.environ['INPUT_COMMIT']
+          if (os.environ.get('GITHUB_REPOSITORY') != 'harveyzhutiancheng-hash/fksjj-web' or
+                  os.environ.get('GITHUB_REF') != 'refs/heads/main' or
+                  os.environ.get('GITHUB_EVENT_NAME') != 'workflow_dispatch' or
+                  not re.fullmatch(r'[0-9a-f]{40}', value) or value != os.environ.get('GITHUB_SHA')):
+              raise SystemExit('Stopped: source context was not approved')
+          PY
+
+      - name: Check out only this pinned source (official GitHub action)
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # official v4.2.2 release commit
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Validate checkout and safe log review before injecting the secret
+        env:
+          FKSSJ_STATUS_LOG_REVIEW_JSON: ${{ inputs.log_review }}
+          FKSSJ_STATUS_LOGS_CURRENT_CONFIRMED: ${{ inputs.logs_current }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B - <<'PY'
+          import importlib.util, os, subprocess, time
+          if subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() != os.environ['GITHUB_SHA']:
+              raise SystemExit('Stopped: actual checkout differs from this workflow SHA')
+          spec = importlib.util.spec_from_file_location('fixed_status_auth_probe', 'deploy/release_auth_probe.py')
+          probe = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(probe)
+          try:
+              probe.validate_context(os.environ)
+              probe.validate_review(os.environ.get('FKSSJ_STATUS_LOG_REVIEW_JSON', ''), int(time.time()))
+          except BaseException:
+              raise SystemExit('Stopped: log review is unsafe, unknown, stale or malformed') from None
+          print('Source and fresh safe log review checked; no signed request sent')
+          PY
+
+      - name: Send only negative and positive status probes, once each
+        env:
+          FKSSJ_RELEASE_HMAC_KEY_HEX: ${{ secrets.FKSSJ_RELEASE_HMAC_KEY_HEX }}
+          FKSSJ_STATUS_LOG_REVIEW_JSON: ${{ inputs.log_review }}
+          FKSSJ_STATUS_LOGS_CURRENT_CONFIRMED: ${{ inputs.logs_current }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B deploy/release_auth_probe.py
+
+# No build/install/package/upload/activation, artifacts or automatic retry.
+# A valid unknown-release status consumes one persistent rejected nonce entry.
+# Unknown transport outcome is not success; do not rerun automatically.
