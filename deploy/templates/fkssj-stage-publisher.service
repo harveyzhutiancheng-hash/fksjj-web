@@ -1,0 +1,44 @@
+# INERT TEMPLATE; administrator provisions identities/shared state separately.
+# A manual start processes one durable job then exits. No timer is enabled.
+# This unit only claims one exclusive upload; it cannot process activation.
+[Unit]
+Description=FKSSJ one-job cold-stage publisher (template)
+RequiresMountsFor=/var/lib/fkssj-release /srv/fkssj
+
+[Service]
+Type=oneshot
+User=fkssj-deploy
+Group=fkssj-release
+UMask=0007
+WorkingDirectory=/opt/fkssj-release
+ExecStart=/usr/bin/python3 -I -B /opt/fkssj-release/release_channel_stage.py stage-worker
+Restart=no
+NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+PrivateNetwork=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX
+ReadOnlyPaths=/opt/fkssj-release /etc/fkssj-release -/srv/fkssj/api-releases
+ReadWritePaths=/var/lib/fkssj-release /srv/fkssj/releases /srv/fkssj/.static-release.lock
+InaccessiblePaths=-/var/lib/fkssj
+# The parent static root remains read-only, including current/api-current and
+# the activation journal. Only cold release candidates and the pre-existing
+# single lock file are writable. Installation must exclusively create or check
+# .static-release.lock as a regular nlink=1 fkssj-deploy:fkssj-release 0600 file;
+# a missing lock fails service startup. No group permissions are expanded.
+# Game DB/WAL/SHM/backups stay outside the writable static root, inaccessible.
+# API receipt is fixed /etc/fkssj-release/api-acceptance.json, read-only. Missing
+# trusted receipt/config pins must refuse activation; no request supplies it.
+# API acceptance/activation remain separately authorized; this stage-only unit
+# never calls activation, including when a valid receipt exists. Do not enable
+# the timer as part of a single-candidate cold-stage operation.

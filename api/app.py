@@ -446,7 +446,13 @@ class Application:
     def _save_get(self, environ):
         with self._transaction() as connection:
             session = self._session(connection, environ)
-            row = connection.execute("SELECT revision,save_json,updated_at FROM cloud_saves WHERE user_id=?", (session["user"]["id"],)).fetchone()
+            user_id = session["user"]["id"]
+            # A shared browser cookie may have changed since this page bound
+            # its local save. Reject that stale page before reading another
+            # account's cloud snapshot, using the same transaction as auth.
+            if environ.get("HTTP_X_FKSSJ_USER") != str(user_id):
+                raise ApiError(403, "user_mismatch", "当前账号已经变化，请重新载入账号存档。")
+            row = connection.execute("SELECT revision,save_json,updated_at FROM cloud_saves WHERE user_id=?", (user_id,)).fetchone()
         return 200, {"revision": row["revision"], "save": json.loads(row["save_json"]), "updatedAt": row["updated_at"]} if row else {"revision": 0, "save": None, "updatedAt": None}, []
 
     def _save_put(self, environ):

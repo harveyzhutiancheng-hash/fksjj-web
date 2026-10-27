@@ -6,9 +6,10 @@ import { ScavengingUI } from './scavenging-ui.js';
 import { ProductionUI } from './production-ui.js';
 import { DivingUI } from './diving-ui.js';
 import { CRAFT_RESOURCE_NAMES } from './production-state.js';
-import { AccountManager } from './account-manager.js';
+import { AccountManager, ACTIVE_ACCOUNT_KEY } from './account-manager.js';
 import { AccountUI } from './account-ui.js';
 import { acquireGamePage } from './page-lock.js';
+import { renderStormObjectives, renderStormTask, stormButtonState } from './storm-view.js';
 
 const $ = (selector) => document.querySelector(selector);
 const names = { wood:'木材', scrap:'废金属', fish:'鲜鱼', water:'淡水', food:'生鱼片', coin:'金币', plastic:'塑料', cloth:'碎布', seaweed:'海藻', glass:'玻璃', ...CRAFT_RESOURCE_NAMES };
@@ -42,7 +43,7 @@ const accounts = new AccountManager({ ownsPage, validate:raw=> {
 await accounts.prepare();
 const game = new GameState({storage:accounts.createStorage()});
 accounts.beforeTransition = () => {
-  if(game.persistenceLocked)return; // Keep the unreadable original available for recovery/logout.
+  if(!accounts.canPlay||game.persistenceLocked)return; // Frozen candidates and unreadable originals must stay intact.
   if (!game.save().ok) throw new Error('本机存档未能保存，请检查浏览器储存空间。');
 };
 let progressionUI, scavengingUI, productionUI, divingUI, accountUI;
@@ -51,6 +52,7 @@ let toastTimer, sound = false, audioContext, ambient, lastQuestMarkup = '', last
 let stormPresentation = false;
 let fishingId = null, autoFishing = false, catchTimer = null, fishingRound = null;
 let introStep = 0, introOpen = false, actionBuilding = null, lastDemandMarkup = '', levelTimer;
+let accountBlocked = false;
 const introLines = [
   ['阿海', '醒醒，老大！这座浮台还没沉，我们总算有个落脚的地方了。'],
   ['阿海', '海上漂着不少木板和旧箱子。捞回来，先搭一把钓鱼椅，解决吃饭的问题。'],
@@ -67,6 +69,12 @@ function canAfford(cost) { return Object.entries(cost || {}).every(([key,n])=>ga
 function costMarkup(cost, compare = true) { return `<span class="cost-list">${Object.entries(cost || {}).map(([key,n])=>`<span class="${compare && game.state.resources[key]<n?'short':''}">${icon(key)}${n}</span>`).join('')}</span>`; }
 function hasCost(cost) { return !!cost && Object.keys(cost).length > 0; }
 function questButtonLabel(quest) { return !quest.complete?'前往':hasCost(quest.cost)?'交付':hasCost(quest.reward)?'领取':'完成'; }
+function replaceMarkupPreservingFocus(container, markup) {
+  const focused=container.contains(document.activeElement)?document.activeElement.closest('button'):null;
+  const target=focused?{action:focused.dataset.action,goal:focused.dataset.goal,id:focused.dataset.id}:null;
+  container.innerHTML=markup;
+  if(target)[...container.querySelectorAll('button')].find(button=>button.dataset.action===target.action&&button.dataset.goal===target.goal&&button.dataset.id===target.id)?.focus({preventScroll:true});
+}
 function currentQuest() { return game.getCurrentTask(); }
 function claimAction(q) { return q.side?'side-claim':q.story?'story-claim':q.followup?'continuation-claim':'claim'; }
 function claimTask(id,category) { return category==='story'?game.claimStoryQuest(id):category==='continuation'?game.claimContinuationQuest(id):game.claimQuest(id); }
@@ -136,8 +144,9 @@ function render(state, event = {}) {
   const questSite=quest&&['build','upgrade'].includes(quest.action?.type)?state.buildings.find(b=>b.type===quest.action.buildingType&&b.construction):null;
   $('#quest-dot').hidden=!quest?.complete;
   $('#tutorial-hint').textContent=quest?.followup ? quest.description : questHints[quest?.id] || '家园继续运转，沿着航道探索更远的海域';
-  const questMarkup=quest ? `<div class="quest-portrait">${icon('journal')}</div><div class="quest-copy"><div class="eyebrow">${quest.story ? `海上故事 · 潜向深海 &nbsp; ${state.story.claimed.length+1}/${game.getStoryQuests().length}` : quest.followup ? `后续建设 · 物资与工坊 &nbsp; ${state.continuation.claimed.length+1}/${game.getContinuationQuests().length}` : `第一章 · 海上家园 &nbsp; ${state.quests.claimed.length+1}/${QUESTS.length}`}</div><h2>${esc(questActions[quest.id]||quest.title)}<span class="quest-counter">(${Math.min(quest.current,quest.target)}/${quest.target})</span></h2><small>${Object.entries(hasCost(quest.cost)?quest.cost:quest.reward).slice(0,4).map(([key,n])=>`<span>${key==='experience'?'EXP':icon(key)}${n}</span>`).join('')}</small></div><button class="gold-button ${quest.complete?'green':''}" data-action="${quest.complete?claimAction(quest):'go-quest'}" data-id="${quest.id}" data-category="${quest.category||'tutorial'}">${questButtonLabel(quest)} ${icon(quest.complete?'check':'arrow')}</button>` : `<div class="quest-portrait">${portrait(1)}</div><div class="quest-copy"><div class="eyebrow">经营首段完成 · 远海救援</div><h2>电台里传来了新的求救信号</h2><small>招募伙伴，组建救援队继续前进。</small></div><button class="gold-button" data-action="progression" data-tab="campaign">闯关 ${icon('flag')}</button>`;
-  if (questMarkup!==lastQuestMarkup) { $('#quest-panel').innerHTML=questMarkup; lastQuestMarkup=questMarkup; }
+  $('#quest-panel').classList.toggle('storm-task-panel',quest?.id==='command');
+  const questMarkup=quest?.id==='command' ? renderStormTask(game.getStormStatus(),{complete:quest.complete,chapter:{current:state.quests.claimed.length+1,total:QUESTS.length}}) : quest ? `<div class="quest-portrait">${icon('journal')}</div><div class="quest-copy"><div class="eyebrow">${quest.story ? `海上故事 · 潜向深海 &nbsp; ${state.story.claimed.length+1}/${game.getStoryQuests().length}` : quest.followup ? `后续建设 · 物资与工坊 &nbsp; ${state.continuation.claimed.length+1}/${game.getContinuationQuests().length}` : `第一章 · 海上家园 &nbsp; ${state.quests.claimed.length+1}/${QUESTS.length}`}</div><h2>${esc(questActions[quest.id]||quest.title)}<span class="quest-counter">(${Math.min(quest.current,quest.target)}/${quest.target})</span></h2><small>${Object.entries(hasCost(quest.cost)?quest.cost:quest.reward).slice(0,4).map(([key,n])=>`<span>${key==='experience'?'EXP':icon(key)}${n}</span>`).join('')}</small></div><button class="gold-button ${quest.complete?'green':''}" data-action="${quest.complete?claimAction(quest):'go-quest'}" data-id="${quest.id}" data-category="${quest.category||'tutorial'}">${questButtonLabel(quest)} ${icon(quest.complete?'check':'arrow')}</button>` : `<div class="quest-portrait">${portrait(1)}</div><div class="quest-copy"><div class="eyebrow">经营首段完成 · 远海救援</div><h2>电台里传来了新的求救信号</h2><small>招募伙伴，组建救援队继续前进。</small></div><button class="gold-button" data-action="progression" data-tab="campaign">闯关 ${icon('flag')}</button>`;
+  if (questMarkup!==lastQuestMarkup) { replaceMarkupPreservingFocus($('#quest-panel'),questMarkup); lastQuestMarkup=questMarkup; }
   if(questSite){const timer=game.getConstruction(questSite.id),label=$('#quest-panel .quest-copy small');label.classList.add('quest-wait');label.innerHTML=`<span>${icon('clock')} ${timer.kind==='upgrade'?'升级中':'建造中'} · ${waitTime(timer.remaining)}</span>`;$('#quest-panel button').textContent='查看进度';}
   scene?.setState(state);
   updateResidentDemand();
@@ -166,6 +175,7 @@ function renderIntro() {
   $('#dialogue-next').textContent=introStep===introLines.length-1?'开始拾荒 ›':'继续 ›';
 }
 function finishIntro() {
+  if(!accounts.canPlay)return;
   game.completeIntro();introOpen=false;$('#opening-dialog').hidden=true;
   document.body.classList.remove('intro-view');scene?.focus();updateGuide();
   toast('先捞回 15 份木材，搭起我们的第一把钓鱼椅。');
@@ -191,7 +201,7 @@ function updateResidentDemand() {
   const el=$('#resident-demand'),d=game.getResidentOrder();
   el.hidden=!d.order || !d.unlocked || !game.state.buildings.some(b=>b.type==='slicer') || !!fishingId || scavengingUI?.visible || productionUI?.visible || divingUI?.visible || introOpen || mode!=='normal' || !!modal;
   if(el.hidden)return;
-  const markup=`<span class="demand-items">${Object.entries(d.order.cost).map(([key,n])=>`<span>${icon(key)}<b class="${game.state.resources[key]<n?'short':''}">${Math.min(n,Math.floor(game.state.resources[key]))}/${n}</b></span>`).join('')}</span><small>${d.canDeliver?'可以交付':`${d.order.resident.name}的需求`}</small>`;
+  const markup=`<span class="demand-items">${Object.entries(d.order.cost).map(([key,n])=>`<span>${icon(key)}<b class="${game.state.resources[key]<n?'short':''}">${amount(game.state.resources[key])}/${n}</b></span>`).join('')}</span><small>${d.canDeliver?'可以交付':`${d.order.resident.name}的需求`}</small>`;
   if(markup!==lastDemandMarkup){el.innerHTML=markup;lastDemandMarkup=markup;}
   el.classList.toggle('ready',d.canDeliver);el.dataset.orderId=d.id;
   const p=anchorForOverlay('resident',el) || {screenX:innerWidth*.58,screenY:innerHeight*.44};
@@ -361,7 +371,7 @@ function updateFishingLive() {
   if(q?.complete){claim.innerHTML=`${icon('check')} ${q.title} · 领取奖励`;claim.dataset.id=q.id;claim.dataset.category=q.category||'tutorial';}
 }
 function castFishing(automatic=false) {
-  if(!fishingId||document.hidden||modal)return;
+  if(!accounts.canPlay||!fishingId||document.hidden||modal)return;
   if(fishingRound){if(fishingRound.phase==='reeling'&&!automatic){fishingRound.progress=Math.min(100,fishingRound.progress+29);playTone(510+fishingRound.progress*3,.035);if(fishingRound.progress>=100)finishFishing();else updateFishingLive();}return;}
   if(game.state.elapsed-game.state.fishing.lastCastAt<2.5-1e-7)return;
   fishingRound={phase:'waiting',remaining:1.1,progress:0,automatic};
@@ -374,6 +384,7 @@ function advanceFishing(dt) {
   if(fishingRound)updateFishingLive();
 }
 function finishFishing() {
+  if(!accounts.canPlay){fishingRound=null;return;}
   fishingRound=null;const result=game.castLine();
   if(!result.ok){toast(result.message);return;}
   const note=$('#fishing-catch');note.innerHTML=`${icon('fish')}<strong>鲜鱼 +${result.amount}</strong><small>收进鱼篓，今天有鱼吃了！</small>`;
@@ -417,7 +428,7 @@ function openExplore() {
   const ship=game.state.buildings.some(b=>b.type==='scavenger');
   openSheet('附近海域','海上拾荒 / 海底潜水 / 漂流救援',`${scavengeEntry()}${divingEntry()}<div class="ocean-map"><div class="map-lines"></div><span class="map-route"></span><span class="map-home">${icon('command')}</span><span class="map-destination">${icon(done?'check':'ship')}</span><span class="map-label">漂流者营地 · 失事小船</span></div><div class="detail-hero"><div><h3>${done?'他们已经安全到家了':'远处，有人在挥手'}</h3><p>${done?'米娅和老乔正在营地里开始新的生活。':'一艘失事的小船上，还有两名幸存者。<br>带上补给，把他们接回家。'}</p></div></div><div class="row"><strong>航行补给</strong>${costMarkup({water:3,food:3})}</div><div class="row"><strong>救援收获</strong><span>${icon('people')} 2 位新伙伴</span></div>${!ship?'<p>需要先在营地建造一艘拾荒船。</p>':''}<button class="gold-button ${done?'green':''}" data-action="rescue" ${done?'disabled':''}>${icon(done?'check':'ship')} ${done?'救援已完成':ship?'派船出发':'先建造拾荒船'}</button>`,'compass','explore');
 }
-function openProduction(id=null,type=null,recipeId=null) { if(introOpen||scavengingUI?.visible||divingUI?.visible||progressionUI?.visible)return;setMode('normal');productionUI.open(id,type);if(recipeId){productionUI.recipeId=recipeId;productionUI.render();} }
+function openProduction(id=null,type=null,recipeId=null) { if(introOpen||scavengingUI?.visible||divingUI?.visible||progressionUI?.visible)return;setMode('normal');productionUI.open(id,type);if(recipeId&&productionUI.recipeId!==recipeId){productionUI.recipeId=recipeId;productionUI.render();productionUI.el.querySelector('[data-factory-action="close"]')?.focus({preventScroll:true});} }
 function openBag() {
   openSheet('家当，都在这儿','收好每一份来自大海的馈赠',`<div class="inventory-grid">${Object.entries(names).map(([key,name])=>`<div class="inventory-cell">${icon(key)}<strong data-bag="${key}">${amount(game.state.resources[key])}</strong><small>${name}</small></div>`).join('')}</div><div class="sheet-section">收集记录</div><div class="row"><strong>海上打捞</strong><span>${game.state.stats.salvageCount} 次</span></div><div class="row"><strong>拼接木筏</strong><span>${game.state.raft.length} 块</span></div><div class="row"><strong>生产设施</strong><span>${game.state.buildings.length} 座</span></div><p>木材和废料用于建造；塑料与碎布由手动拾荒带回；工厂可加工木板、布匹、长绳、救生衣和鱼肠线，日用品厂加工生活用品；海产厨房可以烤鱼，升至2级后用潜水带回的海藻和玻璃加工海藻汁。鲜鱼交给切鱼厂或厨房；食物与淡水会由居民按需取用。</p><button class="gold-button" data-action="production">${icon('materials')} 前往加工工坊</button>`,'bag','bag');
 }
@@ -465,17 +476,25 @@ function goQuest(id,category) {
   else { const type={fish:'fishing',food:'slicer',water:'purifier'}[q.id]; const b=game.state.buildings.find(b=>b.type===type); if(b){if(type==='fishing')showBuildingActions(b.id);else openBuilding(b.id);} else openBuild(); }
 }
 function openStorm() {
-  const storm=game.getStormStatus();
-  const passed=storm.status==='passed';
-  openSheet(passed?'风暴过后':'乌云正在靠近',passed?'大家都平安，这就是最好的消息':'修好避难所，给居民留足补给',`<div class="detail-hero"><div class="building-art" style="background:#d4e2dd">${icon(passed?'sun':'storm')}</div><div><h3>${passed?'海面又亮起来了':'一起，把这一夜撑过去'}</h3><p>${passed?'继续建设家园，点亮归航信标。':'风雨会很大，但准备充分就不用怕。<br>升级指挥中心，备好淡水与食物。'}</p></div></div><div class="row"><strong>${icon('command')} 指挥中心</strong><span data-storm-value="command"></span></div><div class="row"><strong>${icon('water')} 淡水储备</strong><span data-storm-value="water"></span></div><div class="row"><strong>${icon('food')} 食物储备</strong><span data-storm-value="food"></span></div><p>度过风暴会消耗 4 份淡水与 4 份食物。准备好后，再带大家躲进避难所。</p><div class="action-row">${storm.commandLevel<2?'<button class="secondary-button" data-action="open-command">修整指挥中心</button>':''}<button class="gold-button ${passed?'green':''}" data-action="face-storm" ${passed||storm.status==='dormant'?'disabled':''}>${passed?'已经平安度过':storm.ready?'迎接风暴':'检查准备'}</button></div>`,'storm','storm');
+  const storm=game.getStormStatus(),passed=storm.status==='passed';
+  openSheet(passed?'风暴过后':'风暴准备',passed?'大家都平安，这就是最好的消息':'修好避难所，给居民留足补给',`<div class="detail-hero"><div class="building-art" style="background:#d4e2dd">${icon(passed?'sun':'storm')}</div><div><h3>${passed?'海面又亮起来了':'一起，把这一夜撑过去'}</h3><p>${passed?'继续建设家园，点亮归航信标。':'分别准备补给和避难所，备妥后再迎接风暴。'}</p></div></div><div data-storm-objectives></div><p class="storm-consumption">${passed?'风暴已结算，以下为过关目标完成记录；当前库存见资源栏。':'度过风暴会消耗 4 份淡水与 4 份食物。储备按当前库存计算，首餐交付另计。'}</p><div class="action-row"><button class="gold-button ${passed?'green':''}" data-action="face-storm" disabled></button></div>`,'storm','storm');
   updateStormLive();
 }
 function updateStormLive() {
-  const status=game.getStormStatus();
-  $('[data-storm-value="command"]').innerHTML=`${status.commandLevel} / 2 级 ${status.commandLevel>=2?icon('check'):''}`;
-  for(const key of ['water','food'])$(`[data-storm-value="${key}"]`).innerHTML=`${amount(game.state.resources[key])} / 6 ${game.state.resources[key]>=6?icon('check'):''}`;
-  const button=$('[data-action="face-storm"]');
-  button.textContent=status.status==='passed'?'已经平安度过':status.ready?'迎接风暴':'检查准备';
+  const status=game.getStormStatus(),container=$('[data-storm-objectives]');
+  const markup=renderStormObjectives(status);
+  if(container.dataset.markup!==markup){replaceMarkupPreservingFocus(container,markup);container.dataset.markup=markup;}
+  const button=$('[data-action="face-storm"]'),view=stormButtonState(status);
+  button.disabled=view.disabled;button.textContent=view.label;
+}
+function goStormObjective(id) {
+  const objective=game.getStormStatus().objectives.find(goal=>goal.id===id);if(!objective)return;
+  const {buildingType,recipeId}=objective.action;
+  const building=game.state.buildings.find(b=>b.type===buildingType);
+  if(!building){if(buildingType==='command')openBuild();else chooseBuild(buildingType);return;}
+  closeSheet();
+  if(objective.action.type==='production')openProduction(building.id,buildingType,recipeId);
+  else openBuilding(building.id,buildingType==='command');
 }
 function openAccount() {
   closeSheet(); hideBuildingActions(); setMode('normal');
@@ -483,17 +502,35 @@ function openAccount() {
   for(const panel of [progressionUI,scavengingUI,productionUI,divingUI])if(panel?.visible)panel.close();
   accountUI.open();
 }
+function savePlayableCamp() {
+  if(!accounts.canPlay)return {ok:false,persisted:false,message:accounts.message||'请先恢复账号，再继续保存营地。'};
+  return game.save();
+}
+function saveAndSyncCamp() {
+  if(!act(savePlayableCamp())?.ok)return;
+  const epoch=accounts.generation,user=accounts.user;
+  accounts.syncNow().then(()=>{
+    if(accounts.current(epoch,user)&&accounts.canPlay&&accounts.phase==='synced')toast('进度已同步到云端。');
+  }).catch(error=>{if(accounts.current(epoch,user))toast(error.userMessage);});
+}
+function suspendPlayableCamp() {
+  autoFishing=false;fishingRound=null;
+  if(!accounts.canPlay)return;
+  progressionUI.suspend();scavengingUI.suspend();divingUI.suspend();savePlayableCamp();
+}
 function openSettings() {
   const logged=!!accounts.user;
   openSheet('歇一会儿，也没关系','海风会替你守着这里',`<div class="setting-row"><span>${logged?esc(accounts.user.username):'游客营地'}<small>${logged?'账号与云存档':'登录后可在其他设备继续'}</small></span><button class="secondary-button" data-action="account">${logged?'账号管理':'登录 / 注册'}</button></div><div class="setting-row"><span>海上的声音<small>海风、拾荒和建造音效</small></span><button class="secondary-button" data-action="sound">${icon(sound?'sound':'muted')} ${sound?'已开启':'已关闭'}</button></div><div class="setting-row"><span>手动保存<small>${logged?'保存到本机，并尝试同步云端':'自动保存到当前浏览器'}</small></span><button class="secondary-button" data-action="save">保存进度</button></div><div class="setting-row"><span>回到营地<small>重置镜头的位置与缩放</small></span><button class="secondary-button" data-action="focus">重置视角</button></div><div class="setting-row"><span>重新漂流<small>${logged?'重置当前账号营地，并同步云端':'清空本机游客进度，从海上第一天开始'}</small></span><button class="secondary-button danger-button" data-action="confirm-reset">重新开始</button></div><p class="saved-label">${logged?'云存档状态可在账号管理中查看。':'游客进度保存在当前浏览器。'}<br>离开后，设施可累计最多 2 小时的离线产物。</p>`,'gear','settings');
 }
 function showCompletion() {
+  if(!accounts.canPlay||accountUI?.visible)return;
   closeSheet(); setMode('normal'); scene.focus();
   openSheet('家园已经安稳，远海还有人等着我们','首段经营完成 / 英雄与远海闯关已开放',`<div class="celebration">${icon('beacon')}<h3>灯亮了，新的信号也来了。</h3><p>电台里传来了被海盗围困的求救声。沿着航道出发，寻找米娅和失散的伙伴。</p><div class="panel-info"><div><h3>${game.state.population.total} 位居民</h3><p>守住家园</p></div><div><h3>${game.state.buildings.length} 座设施</h3><p>提供补给</p></div></div><button class="gold-button" data-action="journal">继续建设家园 ${icon('arrow')}</button><button class="secondary-button" data-action="progression" data-tab="campaign">前往远海救援</button></div>`,'flag','complete');
   for(let i=0;i<38;i++) {const el=document.createElement('i');el.className='confetti';el.style.cssText=`--x:${Math.random()*100}%;--c:${['#ffd265','#d7ecb9','#fb9567','#f8f2d8'][i%4]};--delay:${Math.random()*.7}s`;$('#game').append(el);setTimeout(()=>el.remove(),4200);}
   playTone(830,.1);setTimeout(()=>playTone(1100,.1),160);setTimeout(()=>playTone(1320,.15),320);
 }
 function showOffline(report) {
+  if(!accounts.canPlay||accountUI?.visible)return;
   const produced=Object.entries(report.produced||{}).filter(([,n])=>n>0);
   if(produced.length) toast(`欢迎回家。离开期间，设施生产了${produced.map(([k,n])=>`${amount(n)}${names[k]}`).join('、')}，点击建筑领取。`);
 }
@@ -551,11 +588,12 @@ document.addEventListener('click',e=> {
   else if(action==='continuation-claim'){const wasJournal=modal==='journal';const result=act(game.claimContinuationQuest(id));if(result.ok&&wasJournal)openJournal();}
   else if(action==='rescue'){if(!game.state.buildings.some(b=>b.type==='scavenger')){openBuild();return;}const result=act(game.explore());if(result.ok){openExplore();scene.focus();}}
   else if(action==='storm')openStorm();
+  else if(action==='storm-goal')goStormObjective(button.dataset.goal);
   else if(action==='open-command')openBuilding(game.state.buildings.find(b=>b.type==='command').id);
   else if(action==='face-storm'){const result=act(game.faceStorm());if(result.ok){closeSheet();scene.focus();setTimeout(()=>toast('风暴过去了。每个人，都平安。'),4500);}}
   else if(action==='sound')toggleSound();
   else if(action==='account')openAccount();
-  else if(action==='save'){act(game.save());accounts.syncNow().then(()=>{if(accounts.phase==='synced')toast('进度已同步到云端。');}).catch(error=>toast(error.userMessage));}
+  else if(action==='save')saveAndSyncCamp();
   else if(action==='focus'){closeSheet();scene.focus();}
   else if(action==='confirm-reset')openSheet('重新出发？',accounts.user?'这会重置当前账号的营地，并同步云端':'这会清除当前浏览器里的游客营地',`<p>木筏、居民、资源与航海日志都会回到最初。确定要重新开始这段旅程吗？</p><div class="action-row"><button class="secondary-button" data-action="settings">保留我的家园</button><button class="gold-button" data-action="reset">重新开始</button></div>`,'anchor','reset');
   else if(action==='settings')openSettings();
@@ -586,16 +624,38 @@ accounts.subscribe(state=>{
   $('#account-button').textContent=labels[state.phase]||'账号';
   $('#account-button').setAttribute('aria-label',`${state.user?.username||'游客'}，${labels[state.phase]}，账号管理`);
   $('#account-button').dataset.phase=state.phase;
+  const blocked=!accounts.canPlay;
+  scene?.setPaused?.(blocked||[accountUI,progressionUI,scavengingUI,productionUI,divingUI].some(panel=>panel?.visible));
+  if(blocked&&!accountBlocked){
+    accountBlocked=true;
+    autoFishing=false;fishingRound=null;clearTimeout(catchTimer);
+    audioContext?.suspend();
+    if(introOpen){introOpen=false;$('#opening-dialog').hidden=true;document.body.classList.remove('intro-view');}
+    closeSheet();exitFishing();hideBuildingActions();
+    for(const panel of [progressionUI,scavengingUI,productionUI,divingUI])if(panel?.visible)panel.close();
+  }
+  accountBlocked=blocked;
   if((['conflict','expired','error'].includes(state.phase)||accounts.needsRemote)&&!accountUI.visible&&!introOpen)openAccount();
 });
+// Direct onclick handlers and sub-panel controls run before bubbling listeners.
+document.addEventListener('click',event=>{
+  if(accounts.canPlay||event.target.closest('#account-root,#account-button,#settings-button'))return;
+  event.preventDefault();event.stopImmediatePropagation();openAccount();
+},true);
 window.addEventListener('online',()=>accounts.syncNow().catch(()=>{}));
-progressionUI=new ProgressionUI($('#progression-root'),{game,notify:toast,onToggle:paused=>{scene?.setPaused?.(paused);}});
-scavengingUI=new ScavengingUI($('#scavenging-root'),{game,notify:toast,onToggle:paused=>{scene?.setPaused?.(paused);updateGuide();updateResidentDemand();}});
-divingUI=new DivingUI($('#diving-root'),{game,notify:toast,onToggle:paused=>{scene?.setPaused?.(paused);updateGuide();updateResidentDemand();}});
-productionUI=new ProductionUI($('#production-root'),{game,notify:toast,onToggle:paused=>{scene?.setPaused?.(paused);updateGuide();updateResidentDemand();},onBuild:chooseBuild,onScavenge:enterScavenging,onDive:enterDiving,onManage:id=>openBuilding(id,true),onFish:()=>{const b=game.state.buildings.find(b=>b.type==='fishing');if(b)enterFishing(b.id);else chooseBuild('fishing');}});
+window.addEventListener('storage',event=>{
+  if(event.storageArea!==accounts.storage||(event.key!==ACTIVE_ACCOUNT_KEY&&event.key!==null))return;
+  let hint=null;
+  try{hint=JSON.parse(event.newValue);}catch{}
+  if((hint?.id??null)!==(accounts.user?.id??null))accounts.freezeIdentity();
+});
+progressionUI=new ProgressionUI($('#progression-root'),{game,notify:toast,onToggle:paused=>{scene?.setPaused?.(paused||!accounts.canPlay);}});
+scavengingUI=new ScavengingUI($('#scavenging-root'),{game,notify:toast,onToggle:paused=>{scene?.setPaused?.(paused||!accounts.canPlay);updateGuide();updateResidentDemand();}});
+divingUI=new DivingUI($('#diving-root'),{game,notify:toast,onToggle:paused=>{scene?.setPaused?.(paused||!accounts.canPlay);updateGuide();updateResidentDemand();}});
+productionUI=new ProductionUI($('#production-root'),{game,notify:toast,onToggle:paused=>{scene?.setPaused?.(paused||!accounts.canPlay);updateGuide();updateResidentDemand();},onBuild:chooseBuild,onOrder:openResidentOrder,onScavenge:enterScavenging,onDive:enterDiving,onManage:id=>openBuilding(id,true),onFish:()=>{const b=game.state.buildings.find(b=>b.type==='fishing');if(b)enterFishing(b.id);else chooseBuild('fishing');}});
 try {
   scene=new RaftScene($('#world'),{
-    onReady:()=>{document.body.classList.add('ready');showIntro();},
+    onReady:()=>{document.body.classList.add('ready');scene?.setPaused?.(!accounts.canPlay||accountUI.visible);showIntro();},
     onCollect:(kind,position)=>{if(!accounts.canPlay||accountUI.visible||modal||fishingId||introOpen||progressionUI.visible||scavengingUI.visible||productionUI.visible||divingUI.visible)return;const result=game.collect(kind);if(result.ok){rewardFloat(result.resources,position);playTone(480+Math.random()*190);}},
     onBuilding:(id)=>{if(accounts.canPlay&&!accountUI.visible&&mode==='normal'&&!fishingId&&!introOpen&&!modal&&!progressionUI.visible&&!scavengingUI.visible&&!productionUI.visible&&!divingUI.visible)showBuildingActions(id);},
     onTile:(x,z)=> {
@@ -605,13 +665,14 @@ try {
       else toast('这里可以建造设施。打开下方“建造”试试。');
     }
   });
+  scene.setPaused(!accounts.canPlay||accountUI.visible);
   game.onChange(render);
   // Keep game time tied to visible wall time. Hidden pages accrue production through load().
   let last=performance.now();
   setInterval(()=>{const now=performance.now(),dt=(now-last)/1000;last=now;if(!document.hidden&&accounts.canPlay&&!accountUI.visible){game.tick(Math.min(dt,2));advanceFishing(Math.min(dt,2));positionBuildingActions();progressionUI.tick(Math.min(dt,2));}},250);
   setInterval(()=>{if(accounts.canPlay&&!accountUI.visible&&autoFishing&&fishingId&&!fishingRound&&!modal&&!document.hidden&&game.state.elapsed-game.state.fishing.lastCastAt>=2.5)castFishing(true);},300);
-  document.addEventListener('visibilitychange',()=>{if(document.hidden){autoFishing=false;fishingRound=null;progressionUI.suspend();scavengingUI.suspend();divingUI.suspend();game.save();accounts.syncNow().catch(()=>{});audioContext?.suspend();}else{if(accounts.canPlay)game.load();last=performance.now();if(sound)audioContext?.resume();}});
-  window.addEventListener('pagehide',()=>{autoFishing=false;fishingRound=null;progressionUI.suspend();scavengingUI.suspend();divingUI.suspend();game.save();});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){suspendPlayableCamp();if(accounts.canPlay)accounts.syncNow().catch(()=>{});audioContext?.suspend();}else{if(accounts.canPlay)game.load();last=performance.now();if(sound&&accounts.canPlay)audioContext?.resume();}});
+  window.addEventListener('pagehide',suspendPlayableCamp);
   setTimeout(()=>{
     document.body.classList.add('ready');
     showIntro();

@@ -1,0 +1,59 @@
+# REVIEWED CANDIDATE ONLY. Installing this file does not authorize starting it.
+# This is the API-acceptance/activation worker, not the cold-stage-only unit.
+# Keep fkssj-publisher.timer stopped/disabled until the exact server changes,
+# policy, route checks and persistent scheduling have been separately approved.
+[Unit]
+Description=FKSSJ one-job verified static publisher
+After=network-online.target fkssj-api.service
+Wants=network-online.target
+RequiresMountsFor=/var/lib/fkssj-release /srv/fkssj /var/backups/fkssj-publisher
+
+[Service]
+Type=oneshot
+User=root
+Group=fkssj-release
+UMask=0007
+WorkingDirectory=/opt/fkssj-release
+ExecStart=/usr/bin/python3 -I -B /opt/fkssj-release/release_channel.py publish-worker
+Restart=no
+TimeoutStartSec=240s
+TimeoutStopSec=15s
+Environment=PYTHONDONTWRITEBYTECODE=1
+NoNewPrivileges=true
+# Required only because /srv/fkssj is an existing 1001-owned 0755 directory:
+# the fixed worker must atomically replace current and write its release log.
+# No CHOWN, SETUID, NET_ADMIN or general sudo grant is required.
+CapabilityBoundingSet=CAP_DAC_OVERRIDE
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+# New capability compared with cold staging: fixed HTTPS API checks use DNS,
+# verified TLS and the code's fixed fkssj-api restart via systemd.
+# Root systemd/D-Bus authority is not an OS-enforced single-unit whitelist.
+# Address-family restrictions are not a hostname firewall. The code fixes the
+# HTTP origin/routes and rejects redirects; it accepts no client-supplied URL.
+PrivateNetwork=false
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+ProtectClock=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadOnlyPaths=/opt/fkssj-release /etc/fkssj-release /srv/fkssj/api-releases
+ReadOnlyPaths=/opt/fkssj-api/venv /opt/fkssj-api/wheels /opt/fkssj-api/manual-static /opt/fkssj-api/requirements.txt
+ReadOnlyPaths=-/srv/fkssj/acme -/var/backups/fkssj-api/install-bindings.json -/var/backups/fkssj-api/install-journal.jsonl -/var/backups/fkssj-api/manual-bindings.json
+ReadWritePaths=/var/lib/fkssj-release /srv/fkssj /var/backups/fkssj-publisher /var/backups/fkssj-api /opt/fkssj-api
+InaccessiblePaths=-/var/lib/fkssj
+# /var/backups/fkssj-api is writable only for the global O_EXCL acceptance
+# budget marker; existing records must be retained, never reset per release.
+# /opt/fkssj-api is writable only for O_EXCL preview.closed AFTER confirmed
+# activation. Existing code/dependencies/static children above stay read-only.
+# The current link's parent must be writable; making only current writable
+# cannot authorize an atomic rename. Static staging sets a scoped 0022 umask
+# in code; the shared state remains 0660. No nginx group membership is added.
+# No player database is opened. Synthetic saves are exercised through HTTPS.
+# processing/uncertain/pending is a hard stop; timeout never authorizes retry.

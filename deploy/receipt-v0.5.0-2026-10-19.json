@@ -248,7 +248,7 @@
       "validFrom": 1792387982,
       "validTo": 1800163981
     },
-    "screenshot": "/Users/zhutiancheng/Desktop/workspace/fkssj/test-results/public-v0.5-fishing.png",
+    "screenshot": "test-results/public-v0.5-fishing.png",
     "source": "test-results/public-v0.5-result.json"
   },
   "publicIntegration": {

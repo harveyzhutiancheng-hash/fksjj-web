@@ -148,6 +148,32 @@ class BoundaryTests(unittest.TestCase):
     def test_logout_that_holds_the_transaction_prevents_following_save(self):
         self._logout_save_race("POST")
 
+    def test_mismatched_get_is_rejected_in_auth_transaction_before_cloud_data_query(self):
+        client = self.registered()
+        saved = client.request("PUT", "/api/save", json_body={"expectedRevision": 0, "save": minimal_save(27)})
+        self.assertEqual(saved.status, 200)
+        traces = []
+        original_connect = self.app._connect
+
+        def traced_connect():
+            connection = original_connect()
+            statements = []
+            traces.append(statements)
+            connection.set_trace_callback(statements.append)
+            return connection
+
+        with patch.object(self.app, "_connect", traced_connect):
+            response = client.request("GET", "/api/save", owner=client.user_id + 1)
+        self.assertEqual((response.status, response.data["code"]), (403, "user_mismatch"))
+        self.assertEqual(set(response.data), {"code", "message"})
+        self.assertEqual(len(traces), 1, "Auth and owner rejection must share one database transaction")
+        statements = [statement.upper() for statement in traces[0]]
+        self.assertEqual(statements[0], "BEGIN")
+        self.assertTrue(any("FROM SESSIONS" in statement for statement in statements))
+        self.assertFalse(any("FROM CLOUD_SAVES" in statement for statement in statements))
+        self.assertEqual(statements[-1], "ROLLBACK")
+        self.assertEqual(client.request("GET", "/api/save").data["save"], minimal_save(27))
+
     def test_malformed_unicode_and_huge_json_numbers_are_opaque_client_errors(self):
         malformed_password = Client(self.app).request("POST", "/api/auth/register", raw=json.dumps({"username": "bad_unicode", "password": "\ud800abcdefg"}).encode())
         self.assertEqual(malformed_password.status, 400)

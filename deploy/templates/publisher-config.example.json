@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "enabled": false,
+  "maximumAutomaticAccounts": 2,
+  "approvedManifestSha256": "b20e11a258007f39129a47601be7a291391c9275ad5ea6b51ab0e9e7f21aa272",
+  "apiBindings": {
+    "manifestSha256": "b20e11a258007f39129a47601be7a291391c9275ad5ea6b51ab0e9e7f21aa272",
+    "apiAppSha256": "3953818d57cff204519840065fad9364d8141784d0a15b9a1d7e8d59751c02dd",
+    "apiInitSha256": "c8a696b4633c13a53fd350ea1e5bcf3195101447e6a63859e5b13f21fd22ccb1",
+    "apiPreviewSha256": "595e332bdd1449cedd63e8164a0b217a412685ac07edec348f715b29c134783c",
+    "backendTarget": "api-releases/fkssj-api-2aa9c0eb6dc0c3a6",
+    "apiUnitSha256": "e9ac8059c360054af7b2ef10450e639578b979463ca301b71fe4ecd76063d10d",
+    "nginxConfigSha256": "fb16acbd3164418ede79b01f2a4e01e195b118d6f82daea2f5b4e663f1c5d80a"
+  }
+}

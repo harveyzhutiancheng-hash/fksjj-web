@@ -1,0 +1,14 @@
+# INERT TEMPLATE, NOT ENABLED. Requires separately authorized service install.
+# Each worker handles one job. processing/uncertain is a hard stop in the code;
+# later timer ticks must never retry or clear such jobs automatically.
+[Unit]
+Description=Check for one pending FKSSJ release job (template)
+
+[Timer]
+OnBootSec=10s
+OnUnitInactiveSec=10s
+AccuracySec=1s
+Unit=fkssj-publisher.service
+
+[Install]
+WantedBy=timers.target

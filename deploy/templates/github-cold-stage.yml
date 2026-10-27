@@ -1,0 +1,256 @@
+# INERT CANDIDATE, not enabled and deliberately outside .github/workflows.
+# Proposed reviewed destination: .github/workflows/fkssj-cold-stage.yml.
+# This file executes nothing while it remains a source template.
+# Set FKSSJ_COLD_STAGE_READY=true only AFTER the explicit stage-only server
+# code/unit and upload-only route are separately installed, reviewed and
+# preflight-verified. Keep it unset now. The receiver alone is insufficient.
+# Preconfigure the existing receive environment with main-only deployment and
+# required reviewers. A name in YAML does not establish protection.
+# The workstation operator must be ready before approving this run: after one
+# upload, start only the reviewed stage-only worker within the ORIGINAL <=300s
+# envelope TTL. The workflow will not start any server service or timer.
+# The client must use the separately reviewed fixed HTTPS game-domain path.
+# No arbitrary URL/ref/environment, SSH, SWAS, PAT, API installation or receipts.
+# Official checkout action pin was verified in the existing approved template.
+name: Upload and cold-stage one reviewed static release (INERT TEMPLATE)
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: Approved full lowercase main commit, exactly this workflow's github.sha
+        required: true
+        type: string
+      expected_current:
+        description: Independently verified actual current relative target, releases/ID
+        required: true
+        type: string
+      operator_ready:
+        description: Workbench operator is ready to run the reviewed stage-only worker within the original upload TTL
+        required: true
+        default: false
+        type: boolean
+
+permissions: {}
+concurrency:
+  group: fkssj-cold-stage
+  cancel-in-progress: false
+
+jobs:
+  stage:
+    if: >-
+      github.repository == 'harveyzhutiancheng-hash/fksjj-web' &&
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    environment: fkssj-release-receive
+    permissions:
+      contents: read
+    outputs:
+      metadata_json: ${{ steps.prepare.outputs.metadata_json }}
+      version: ${{ steps.prepare.outputs.version }}
+      stage_state: ${{ steps.wait.outputs.state }}
+    steps:
+      - name: Validate exact source context before checking out code
+        id: paths
+        env:
+          INPUT_COMMIT: ${{ inputs.commit }}
+          INPUT_CURRENT: ${{ inputs.expected_current }}
+          COLD_STAGE_READY: ${{ vars.FKSSJ_COLD_STAGE_READY }}
+          OPERATOR_READY: ${{ inputs.operator_ready }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, pathlib, re, tempfile
+          commit = os.environ['INPUT_COMMIT']
+          if (os.environ.get('GITHUB_REPOSITORY') != 'harveyzhutiancheng-hash/fksjj-web' or
+                  os.environ.get('GITHUB_REF') != 'refs/heads/main' or
+                  os.environ.get('GITHUB_EVENT_NAME') != 'workflow_dispatch' or
+                  not re.fullmatch(r'[0-9a-f]{40}', commit) or commit != os.environ.get('GITHUB_SHA')):
+              raise SystemExit('Refuse source context: input commit must equal this trusted main workflow SHA')
+          current = os.environ['INPUT_CURRENT']
+          if not re.fullmatch(r'releases/[A-Za-z0-9][A-Za-z0-9._-]{0,95}', current) or '..' in current:
+              raise SystemExit('Expected current must be independently verified, not guessed')
+          if os.environ.get('COLD_STAGE_READY') != 'true':
+              raise SystemExit('Stopped: reviewed cold-stage server installation and preflight are not confirmed')
+          if os.environ.get('OPERATOR_READY') != 'true':
+              raise SystemExit('Stopped: Workbench operator must be ready before any upload')
+          work = pathlib.Path(tempfile.mkdtemp(prefix='fkssj-cold-stage-run-', dir=os.environ['RUNNER_TEMP']))
+          paths = {'work': work, 'static': work / 'static', 'artifact': work / 'release.tar',
+                   'info': work / 'bundle-info.json', 'metadata': work / 'client-state.json',
+                   'test_python': work / 'test-venv/bin/python'}
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              for key, value in paths.items():
+                  output.write(f'{key}={value}\n')
+          PY
+
+      - name: Check out this exact trusted main workflow commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # official v4.2.2 release pin
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Verify actual checkout and report tools
+        env:
+          INPUT_COMMIT: ${{ inputs.commit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, re, subprocess, sys
+          actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          if actual != os.environ['INPUT_COMMIT'] or actual != os.environ['GITHUB_SHA']:
+              raise SystemExit('Actual checkout differs from approved commit')
+          if sys.version_info < (3, 12):
+              raise SystemExit('Python 3.12 or newer is required')
+          for tool, reviewed_major in [('node', 24), ('npm', 11)]:
+              version = subprocess.check_output([tool, '--version'], text=True).strip()
+              match = re.fullmatch(r'v?(\d+)\.\d+\.\d+', version)
+              if not match or int(match[1]) != reviewed_major:
+                  raise SystemExit('Runner tool major differs from this reviewed template; stop without installing replacements')
+              print(tool, version)
+          PY
+          python3 --version
+
+      - name: Install locked JavaScript dependencies without lifecycle scripts
+        shell: bash
+        run: npm ci --ignore-scripts
+
+      - name: Prepare isolated Python test dependency
+        env:
+          RELEASE_WORK: ${{ steps.paths.outputs.work }}
+          RELEASE_TEST_PYTHON: ${{ steps.paths.outputs.test_python }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RELEASE_WORK/test-venv"
+          "$RELEASE_TEST_PYTHON" -m pip install --disable-pip-version-check --only-binary=:all: PyYAML==6.0.2
+          "$RELEASE_TEST_PYTHON" -c 'import yaml; print("PyYAML", yaml.__version__)'
+
+      - name: Test source behavior
+        shell: bash
+        run: npm run test:source
+
+      - name: Test backend and release safety with temporary fixtures
+        env:
+          RELEASE_TEST_PYTHON: ${{ steps.paths.outputs.test_python }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RELEASE_TEST_PYTHON" -m unittest \
+            api.test_api api.test_boundaries \
+            deploy.test_static_release deploy.test_release_channel \
+            deploy.test_release_client deploy.test_release_orchestrator \
+            deploy.test_cold_stage_worker deploy.test_cold_stage_workflow -v
+
+      - name: Test real local HTTP account integration
+        shell: bash
+        run: npm run test:http
+
+      - name: Prepare white-listed static output with the existing packager
+        env:
+          RELEASE_STATIC: ${{ steps.paths.outputs.static }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node deploy/package-static.mjs --output "$RELEASE_STATIC"
+
+      - name: Bundle validated static bytes as uncompressed release.tar
+        env:
+          RELEASE_STATIC: ${{ steps.paths.outputs.static }}
+          RELEASE_ARTIFACT: ${{ steps.paths.outputs.artifact }}
+          RELEASE_INFO: ${{ steps.paths.outputs.info }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B deploy/release_orchestrator.py bundle \
+            --source "$RELEASE_STATIC" --output "$RELEASE_ARTIFACT" --info "$RELEASE_INFO"
+
+      - name: Persist recovery bindings BEFORE any signed release request
+        id: prepare
+        env:
+          INPUT_COMMIT: ${{ inputs.commit }}
+          INPUT_CURRENT: ${{ inputs.expected_current }}
+          RELEASE_ARTIFACT: ${{ steps.paths.outputs.artifact }}
+          RELEASE_INFO: ${{ steps.paths.outputs.info }}
+          RELEASE_METADATA: ${{ steps.paths.outputs.metadata }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, re, secrets, subprocess
+          info = json.loads(pathlib.Path(os.environ['RELEASE_INFO']).read_text())
+          package = json.loads(pathlib.Path('package.json').read_text())
+          if info.get('version') != '0.14.0' or package.get('version') != info['version']:
+              raise SystemExit('Unexpected static release version')
+          for key in ('manifestSha256', 'artifactSha256'):
+              if not isinstance(info.get(key), str) or not re.fullmatch(r'[0-9a-f]{64}', info[key]):
+                  raise SystemExit('Malformed bundle digest')
+          if type(info.get('artifactBytes')) is not int or not 0 < info['artifactBytes'] <= 16 * 1024 * 1024:
+              raise SystemExit('Malformed bundle length')
+          subprocess.run(['python3','-I','-B','deploy/release_client.py','prepare-upload',
+                          '--artifact',os.environ['RELEASE_ARTIFACT'],
+                          '--metadata',os.environ['RELEASE_METADATA'],
+                          '--release-id',secrets.token_hex(16),'--commit',os.environ['INPUT_COMMIT'],
+                          '--manifest-sha256',info['manifestSha256'],
+                          '--expected-current',os.environ['INPUT_CURRENT']], check=True)
+          metadata = json.loads(pathlib.Path(os.environ['RELEASE_METADATA']).read_text())
+          bindings = metadata['bindings']
+          if (bindings['artifactSha256'] != info['artifactSha256'] or
+                  bindings['artifactBytes'] != info['artifactBytes'] or
+                  bindings['manifestSha256'] != info['manifestSha256']):
+              raise SystemExit('Prepared bytes differ from validated bundle')
+          # GitHub publishes this completed step's summary BEFORE the upload
+          # step starts. No key, HMAC signature, nonce or TTL is copied here.
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('Prepared recovery bindings; no release request has been sent yet. '
+                            'On unknown/cancelled result, do not rerun upload. '
+                            'Use these non-secret bindings for a fresh authenticated status query.\n\n')
+              summary.write('Operator: after the received acknowledgement, promptly start only the reviewed '
+                            'stage-only worker once. The original upload envelope has at most 300 seconds; '
+                            'the staged-state wait below is bounded to 180 seconds. Do not wait for a timeout '
+                            'before starting the worker, and do not re-sign a queued upload.\n\n')
+              summary.write('```json\n' + json.dumps(metadata, sort_keys=True, indent=2) + '\n```\n')
+              summary.write('Static version: ' + info['version'] + '\n')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('metadata_json=' + json.dumps(metadata, sort_keys=True, separators=(',', ':')) + '\n')
+              output.write('version=' + info['version'] + '\n')
+          PY
+
+      - name: Upload exactly once (202 means received only)
+        env:
+          FKSSJ_RELEASE_HMAC_KEY_HEX: ${{ secrets.FKSSJ_RELEASE_HMAC_KEY_HEX }}
+          RELEASE_ARTIFACT: ${{ steps.paths.outputs.artifact }}
+          RELEASE_METADATA: ${{ steps.paths.outputs.metadata }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B deploy/release_client.py upload \
+            --artifact "$RELEASE_ARTIFACT" --metadata "$RELEASE_METADATA"
+
+      - name: Wait for authenticated staged state without another upload
+        id: wait
+        env:
+          FKSSJ_RELEASE_HMAC_KEY_HEX: ${{ secrets.FKSSJ_RELEASE_HMAC_KEY_HEX }}
+          RELEASE_METADATA: ${{ steps.paths.outputs.metadata }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B deploy/release_orchestrator.py wait \
+            --metadata "$RELEASE_METADATA" --target staged --timeout 180 --interval 5
+          python3 - <<'PY'
+          import os
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('state=staged\n')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('Authenticated state is staged only. Separately verify the old current target is unchanged; this is not public-site verification.\n')
+          PY
+# 202 is received only; success here requires authenticated staged state.
+# Never resend an upload after unknown response, runner loss or cancellation.
+# Preserve the non-secret metadata; use a separately authorized fresh status
+# query to resolve an unknown outcome. Never reset expected_current or rollback.
+# The workflow cannot prove Nginx readability or an unchanged current symlink;
+# those are separate server-side acceptance checks before this stage is closed.
