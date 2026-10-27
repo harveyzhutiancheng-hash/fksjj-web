@@ -27,12 +27,12 @@ FKSSJ_TRUSTED_PROXIES=127.0.0.1,::1 \
 | POST `/api/auth/register` | JSON `{username,password}`，成功200 `{user,csrfToken}` |
 | POST `/api/auth/login` | 同上；错误账号与错误密码统一401文案 |
 | POST `/api/auth/logout` | `{ok:true}`，匿名调用幂等；无需请求体 |
-| GET `/api/save` | `{revision:0,save:null,updatedAt:null}` 或实际记录 |
+| GET `/api/save` | 要求 `X-FKSSJ-User: String(user.id)`；返回 `{revision:0,save:null,updatedAt:null}` 或实际记录 |
 | PUT `/api/save` | JSON `{expectedRevision,save}`，成功 `{revision,updatedAt}` |
 
 用户名是3–24个ASCII字母、数字或下划线，统一转小写。密码是8–128个字符，保留前后空格，不做trim或Unicode归一化。注册与登录均设置30天 `__Host-fkssj_session`，具有 `HttpOnly; Secure; SameSite=Lax; Path=/`；每次成功登录生成新token并撤销当前cookie对应的旧会话。数据库仅保留256位随机session的SHA256，不保存原token；CSRF token通过该随机会话派生。浏览器HTTP本地环境若不接受Secure cookie，应使用本地HTTPS，不降低生产cookie属性。
 
-所有写请求要求 `Origin` 精确匹配。注册、登录和PUT要求 `application/json`。已登录注销与PUT同时要求 `X-CSRF-Token`；PUT还要求 `X-FKSSJ-User: String(user.id)` 与该事务内查到的session账号一致。客户端body内的owner/userId不决定归属。匿名云存档接口返回401；错误来源/CSRF/owner分别为403 `origin_invalid`、`csrf_invalid`、`user_mismatch`。
+所有写请求要求 `Origin` 精确匹配。注册、登录和PUT要求 `application/json`。已登录注销与PUT同时要求 `X-CSRF-Token`；GET与PUT云档均要求 `X-FKSSJ-User: String(user.id)` 与该事务内查到的session账号一致，缺失、格式不同或错配都返回403 `user_mismatch`。GET在身份校验后才查询云档，拒绝响应不包含存档。客户端body内的owner/userId不决定归属。匿名云存档接口返回401；错误来源/CSRF/owner分别为403 `origin_invalid`、`csrf_invalid`、`user_mismatch`。
 
 云存档整次HTTP JSON请求体上限1,048,576字节。校验外层version1和基本对象/数组形状，全树数值有限，最多64层与100,000节点；不归一化游戏内部版本，不改变已付生产/施工快照，不改 `save.savedAt`。`revision` 从1单调递增，服务器独立提供毫秒Unix整数 `updatedAt`，无档时为null。账号验证、CSRF、owner核对与CAS更新位于同一 `BEGIN IMMEDIATE` 事务。冲突返回409 `{code:'save_conflict',message,revision,updatedAt}`，不覆盖数据。每账号最近10个被替换快照保存在内部 `save_history`，没有对外读取/恢复接口。
 

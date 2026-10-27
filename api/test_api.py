@@ -139,7 +139,8 @@ class Client:
         actual_csrf = self.csrf if csrf is _AUTO and writing else csrf
         if actual_csrf is not _AUTO and actual_csrf is not None:
             request_headers["X-CSRF-Token"] = actual_csrf
-        actual_owner = self.user_id if owner is _AUTO and method == "PUT" else owner
+        save_request = path == "/api/save" and method in ("GET", "PUT")
+        actual_owner = self.user_id if owner is _AUTO and save_request else owner
         if actual_owner is not _AUTO and actual_owner is not None:
             request_headers["X-FKSSJ-User"] = str(actual_owner)
         if self.cookies:
@@ -414,6 +415,43 @@ class APITestCase(unittest.TestCase):
         self.assert_status(self.upload(minimal_save(99), client=other), 200)
         self.assertEqual(other.request("GET", "/api/save").data["save"]["resources"]["wood"], 99)
         self.assertEqual(self.client.request("GET", "/api/save").data["save"], snapshot)
+
+    def test_save_get_requires_an_exact_identity_header_even_when_cloud_is_empty(self):
+        self.register()
+        own_id = self.client.user_id
+        for owner in (None, "", own_id + 1, "not-an-id", f"0{own_id}", f" {own_id}", f"{own_id} "):
+            with self.subTest(owner=owner):
+                data = self.assert_error(
+                    self.client.request("GET", "/api/save", owner=owner),
+                    403, "user_mismatch",
+                )
+                self.assertEqual(set(data), {"code", "message"})
+        self.assertEqual(
+            self.assert_status(self.client.request("GET", "/api/save"), 200),
+            {"revision": 0, "save": None, "updatedAt": None},
+        )
+
+    def test_stale_identity_header_with_another_cookie_does_not_disclose_or_change_either_save(self):
+        self.register()
+        self.assert_status(self.upload(minimal_save(11)), 200)
+        self.assert_status(self.upload(minimal_save(12), 1), 200)
+        other = Client(self.app)
+        self.register("bob", client=other)
+        self.assert_status(self.upload(minimal_save(91), client=other), 200)
+        before_a = self.client.request("GET", "/api/save").data
+        before_b = other.request("GET", "/api/save").data
+        history_a, history_b = self.history_for(self.client.user_id), self.history_for(other.user_id)
+
+        # The transport now sends B's cookie, while an old A page still sends
+        # A's captured identity. Neither A nor B may be returned in this error.
+        stale_page = self.client.clone()
+        stale_page.cookies = other.cookies.copy()
+        denied = self.assert_error(stale_page.request("GET", "/api/save"), 403, "user_mismatch")
+        self.assertEqual(set(denied), {"code", "message"})
+        self.assertEqual(self.assert_status(other.request("GET", "/api/save"), 200), before_b)
+        self.assertEqual(self.assert_status(self.client.request("GET", "/api/save"), 200), before_a)
+        self.assertEqual(self.history_for(self.client.user_id), history_a)
+        self.assertEqual(self.history_for(other.user_id), history_b)
 
     def test_compare_and_swap_conflict_preserves_authoritative_data(self):
         self.register()

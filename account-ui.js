@@ -30,7 +30,7 @@ export class AccountUI {
     this.visible = false;
     this.mode = 'login';
     this.localBusy = false;
-    this.confirmLocal = false;
+    this.confirmLocal = null;
     this.screen = null;
     this.id = `account-dialog-${++nextAccountDialog}`;
     this.inertSiblings = [];
@@ -57,7 +57,7 @@ export class AccountUI {
     this.previousInert = this.el.inert;
     this.el.inert = false;
     this.visible = true;
-    this.confirmLocal = false;
+    this.confirmLocal = null;
     this.screen = null;
     this.el.hidden = false;
     this.mount();
@@ -111,7 +111,7 @@ export class AccountUI {
           </section>
           <p class="account-error" id="${this.id}-error" role="alert" aria-live="assertive" aria-atomic="true" hidden></p>
         </div>
-        <footer class="account-footer"><button type="submit" form="${this.id}-form" class="account-button account-primary" data-account-submit data-account-lock>登录账号</button><button type="button" class="account-button account-primary" data-account-action="sync" data-account-sync data-account-lock hidden>保存当前营地</button><button type="button" class="account-button account-secondary" data-account-action="logout" data-account-logout data-account-lock hidden>退出登录</button></footer>
+        <footer class="account-footer"><button type="submit" form="${this.id}-form" class="account-button account-primary" data-account-submit data-account-lock>登录账号</button><button type="button" class="account-button account-primary" data-account-action="sync" data-account-sync data-account-lock hidden>保存当前营地</button><button type="button" class="account-button account-primary" data-account-action="reload" data-account-reload data-account-lock hidden>重新载入账号营地</button><button type="button" class="account-button account-secondary" data-account-action="logout" data-account-logout data-account-lock hidden>退出登录</button></footer>
       </section></div>`;
     this.form = this.el.querySelector('form');
     this.form.addEventListener('change', (event) => {
@@ -140,7 +140,7 @@ export class AccountUI {
       }
       this.screen = nextScreen;
     }
-    if (!conflict) this.confirmLocal = false;
+    if (!conflict || this.confirmLocal && (this.confirmLocal.userId !== state.user?.id || this.confirmLocal.revision !== state.conflict?.revision)) this.confirmLocal = null;
     this.el.dataset.phase = state.phase || 'guest';
     const [label, fallback] = STATUS[state.phase] || STATUS.error;
     this.el.querySelector('[data-account-status]').textContent = label;
@@ -163,7 +163,7 @@ export class AccountUI {
       button.classList.toggle('selected', selected);
     }
     this.el.querySelector('[data-account-conflict]').hidden = !conflict;
-    this.el.querySelector('[data-account-conflict-choice]').hidden = this.confirmLocal;
+    this.el.querySelector('[data-account-conflict-choice]').hidden = !!this.confirmLocal;
     this.el.querySelector('[data-account-review]').hidden = !this.confirmLocal;
     const cloudTime = dateLabel(state.conflict?.updatedAt);
     this.el.querySelector('[data-account-cloud-time]').textContent = cloudTime;
@@ -176,8 +176,9 @@ export class AccountUI {
     submit.hidden = authenticated;
     submit.textContent = busy ? '正在处理…' : expired ? '重新登录' : this.mode === 'register' ? '注册并保存营地' : '登录账号';
     const sync = this.el.querySelector('[data-account-sync]');
-    sync.hidden = !authenticated || conflict;
+    sync.hidden = !authenticated || conflict || state.phase === 'error' || state.identityFrozen;
     sync.textContent = busy ? '正在保存…' : '保存当前营地';
+    this.el.querySelector('[data-account-reload]').hidden = !authenticated || !(state.phase === 'error' || state.identityFrozen);
     this.el.querySelector('[data-account-logout]').hidden = !authenticated && !expired;
     this.el.querySelector('.account-footer').classList.toggle('account-footer-single', !authenticated && !expired || conflict);
     if (state.phase === 'error' && state.message && !this.errorMessage) this.showError(state.message);
@@ -235,15 +236,28 @@ export class AccountUI {
       this.clearPasswords(); this.clearError(); this.sync();
       this.form.elements.username.focus({ preventScroll: true });
     } else if (action === 'sync') void this.perform(() => this.manager.syncNow());
+    else if (action === 'reload') this.manager.reload();
     else if (action === 'logout') void this.perform(() => this.manager.logout());
-    else if (action === 'cloud') void this.perform(() => this.manager.resolveConflict('cloud'));
+    else if (action === 'cloud') {
+      const state = this.manager.snapshot();
+      if(state.phase !== 'conflict' || !state.user)return;
+      void this.perform(() => this.manager.resolveConflict('cloud', {userId:state.user?.id,revision:state.conflict?.revision}));
+    }
     else if (action === 'review-local') {
-      this.confirmLocal = true; this.clearError(); this.sync();
+      const state = this.manager.snapshot();
+      if(state.phase !== 'conflict' || !state.user)return;
+      this.confirmLocal = {userId:state.user.id,revision:state.conflict?.revision}; this.clearError(); this.sync();
       this.el.querySelector('[data-account-action="confirm-local"]')?.focus({ preventScroll: true });
     } else if (action === 'cancel-local') {
-      this.confirmLocal = false; this.clearError(); this.sync();
+      this.confirmLocal = null; this.clearError(); this.sync();
       this.el.querySelector('[data-account-action="review-local"]')?.focus({ preventScroll: true });
-    } else if (action === 'confirm-local' && this.confirmLocal) void this.perform(() => this.manager.resolveConflict('local'));
+    } else if (action === 'confirm-local' && this.confirmLocal) {
+      const state=this.manager.snapshot(), expected=this.confirmLocal;
+      if(state.phase!=='conflict'||expected.userId!==state.user?.id||expected.revision!==state.conflict?.revision){
+        this.confirmLocal=null;this.sync();this.showError('营地进度已经变化，请重新查看后确认。');return;
+      }
+      void this.perform(() => this.manager.resolveConflict('local', expected));
+    }
   }
 
   showError(message, field = null) {

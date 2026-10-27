@@ -2111,3 +2111,45 @@ svg {
 .account-entry[data-phase="conflict"],.account-entry[data-phase="expired"],.account-entry[data-phase="error"] {border-color:#ffd36c;color:#ffe49b;}
 .account-entry:focus-visible {outline:3px solid #ffdb7c;outline-offset:3px;}
 #loading>span {max-width:300px;text-align:center;line-height:1.7;}
+
+/* Each storm objective has its own progress and destination. */
+.quest-panel.storm-task-panel {display:block;padding:9px 10px;min-height:0;max-height:calc(100dvh - 205px);overflow-y:auto;overscroll-behavior:contain;}
+.storm-task-heading {display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.storm-task-heading>div {min-width:0;}
+.storm-task-heading .eyebrow {color:#b7cbe3;font-size:9px;}
+.storm-task-heading h2 {font-size:14px;margin:3px 0 5px;line-height:1.3;}
+.quest-panel .storm-task-heading .gold-button {min-height:44px;flex:none;}
+.storm-objectives {display:grid;gap:9px;margin:14px 0;}
+.storm-objective {display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #bdc9bf;border-radius:5px;background:#eef0e2;color:#273d57;}
+.storm-goal-icon {flex:none;display:grid;place-items:center;width:30px;font-size:30px;}
+.storm-goal-copy {flex:1;min-width:0;}
+.storm-goal-label {display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.5;margin-bottom:5px;}
+.storm-goal-label strong {font-size:12px;}
+.storm-goal-label>span {font-size:11px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.storm-goal-track {height:7px;border:1px solid #889ca8;border-radius:3px;background:#c7d4da;overflow:hidden;}
+.storm-goal-track i {display:block;height:100%;background:#e4b95c;}
+.storm-objective.complete .storm-goal-track i {background:#80ac76;}
+.storm-objective .storm-goal-go {flex:none;min-width:54px;min-height:44px;padding:7px;display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap;font-size:11px;}
+.storm-goal-go svg {width:14px;height:14px;}
+.storm-task-panel .storm-objectives {gap:5px;margin:6px 0;}
+.storm-task-panel .storm-objective {padding:0 0 0 6px;gap:6px;border-color:#5b718b;background:#233f60;color:#fff4d8;}
+.storm-task-panel .storm-goal-icon {width:22px;font-size:22px;}
+.storm-task-panel .storm-goal-label {gap:2px 6px;margin-bottom:3px;}
+.storm-task-panel .storm-goal-label strong {font-size:11px;}
+.storm-task-panel .storm-goal-label>span {font-size:10px;color:#dce9ed;}
+.storm-task-panel .storm-goal-track {height:5px;background:#112945;border-color:#71849a;}
+.storm-task-panel .storm-goal-go {border:0;border-left:1px solid #61748b;border-radius:0 3px 3px 0;background:#f5d475;color:#263956;}
+.storm-task-note {font-size:9px;line-height:1.5;margin:5px 0 0;color:#c8d9e9;}
+.storm-consumption {font-size:12px;line-height:1.8;}
+.storm-goal-go:focus-visible {outline:3px solid #f19b47;outline-offset:2px;}
+@media(max-width:350px) {
+  .quest-panel.storm-task-panel {padding:7px;}
+  .storm-task-panel .storm-goal-icon {display:none;}
+  .storm-objective {gap:7px;padding:8px;}
+  .storm-goal-icon {width:24px;font-size:24px;}
+  .storm-task-panel .storm-goal-label>span {font-size:9px;}
+}
+@media(max-height:500px) and (min-width:601px) {
+  .storm-task-panel .storm-task-note {display:none;}
+  .quest-panel.storm-task-panel {max-height:calc(100dvh - 130px);}
+}

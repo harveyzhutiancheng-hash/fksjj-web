@@ -500,6 +500,149 @@ test('long term thirst and hunger reduce efficiency but never remove residents o
   assert.equal(game.collect('crate').ok, true);
 });
 
+test('storm objectives expose independent supply and command progress with navigation targets', () => {
+  const game = createGame();
+  game.state.storm.status = 'approaching';
+  game.state.resources.food = 2;
+  game.state.resources.water = 6;
+  game.state.stats.productionCollected.food = 100;
+  game.state.stats.productionCollected.water = 100;
+  const status = game.getStormStatus();
+  assert.equal(status.ready, false);
+  assert.deepEqual(status.requirements, { commandLevel: 2, water: 6, food: 6 });
+  assert.deepEqual(status.objectives, [
+    { id: 'food', current: 2, target: 6, complete: false, action: { type: 'production', buildingType: 'slicer', recipeId: 'sashimi' } },
+    { id: 'command', current: 1, target: 2, complete: false, action: { type: 'building', buildingType: 'command' } },
+    { id: 'water', current: 6, target: 6, complete: true, action: { type: 'building', buildingType: 'purifier' } },
+  ]);
+  assert.equal(game.state.buildings.some((building) => building.type === 'slicer' || building.type === 'purifier'), false, 'Absent facilities still have navigation targets');
+  fund(game, game.getUpgradeCost('command'));
+  assert.equal(game.upgradeBuilding('command').ok, true);
+  fund(game, { food: 6 });
+  assert.equal(game.getStormStatus().ready, true);
+  assert.equal(game.getStormStatus().objectives.every((objective) => objective.complete), true);
+  game.state.resources.food = 1;
+  game.state.resources.water = 4;
+  assert.deepEqual(game.getStormStatus().objectives.map(({ current, complete }) => ({ current, complete })), [
+    { current: 1, complete: false }, { current: 2, complete: true }, { current: 4, complete: false },
+  ], 'Unpassed supply goals track declining inventory despite high lifetime production');
+  assert.equal(game.getStormStatus().ready, false);
+});
+
+test('storm objective reads do not consume supplies, save, emit events or expose mutable state', () => {
+  let writes = 0;
+  const game = new GameState({ storage: { getItem: () => null, setItem: () => { writes++; } }, autoLoad: false });
+  const events = [];
+  game.onChange((state, event) => events.push(event.type), { immediate: false });
+  const before = game.getState();
+  const status = game.getStormStatus();
+  status.objectives[0].current = 999;
+  status.objectives[0].action.buildingType = 'farm';
+  status.objectives.splice(1);
+  assert.equal(game.getStormStatus().objectives.length, 3);
+  assert.equal(game.getStormStatus().objectives[0].action.buildingType, 'slicer');
+  assert.deepEqual(game.getState(), before);
+  assert.deepEqual(events, []);
+  assert.equal(writes, 0);
+});
+
+test('storm food reserves remain separate from the five-portion first-meal production and delivery', () => {
+  const game = createGame();
+  const slicer = build(game, 'slicer');
+  fund(game, { fish: 30 });
+  const queued = game.queueProduction('sashimi', 5, slicer.id);
+  assert.equal(queued.ok, true);
+  game.tick(450);
+  assert.equal(game.claimQueuedProduction(queued.job.id).ok, true);
+  assert.deepEqual(game.getResidentOrder().productionRequired, { food: 5 });
+  assert.equal(game.getResidentOrder().canDeliver, true);
+  assert.deepEqual(game.getStormStatus().objectives[0], {
+    id: 'food', current: 5, target: 6, complete: false,
+    action: { type: 'production', buildingType: 'slicer', recipeId: 'sashimi' },
+  });
+  assert.equal(game.deliverResidentOrder('first-meal').ok, true);
+  assert.equal(game.state.resources.food, 0);
+  assert.equal(game.state.stats.productionCollected.food, 5);
+  assert.equal(game.questStatus('food').complete, true);
+  assert.equal(game.getStormStatus().objectives[0].current, 0);
+  assert.equal(game.getStormStatus().objectives[0].complete, false);
+  fund(game, { food: 6 });
+  assert.equal(game.getStormStatus().objectives[0].complete, true, 'Reserve stock can be replenished without a second first meal');
+  assert.equal(game.state.stats.productionCollected.food, 5);
+});
+
+test('storm reserves preserve shared food compatibility with farm and legacy kitchen production', () => {
+  for (const type of ['farm', 'kitchen']) {
+    const game = createGame();
+    const facility = build(game, type);
+    fund(game, { water: 2, fish: 8 });
+    game.tick(BUILDINGS[type].production.interval * 2 + 2);
+    assert.equal(game.collectProduction(facility.id).ok, true);
+    assert.equal(game.state.resources.food, 6, type);
+    assert.equal(game.getStormStatus().objectives[0].current, 6, type);
+    assert.equal(game.getStormStatus().objectives[0].complete, true, type);
+  }
+});
+
+test('passed storm objectives stay complete while storm charges and quest rewards remain one-time', () => {
+  const game = createGame();
+  game.state.storm.status = 'approaching';
+  game.state.buildings[0].level = 2;
+  game.state.resources.food = 6;
+  game.state.resources.water = 6;
+  game.state.quests.claimed = QUESTS.slice(0, QUESTS.findIndex((quest) => quest.id === 'command')).map((quest) => quest.id);
+  const before = structuredClone(game.state.resources);
+  assert.equal(game.faceStorm().ok, true);
+  assert.equal(game.state.resources.food, before.food - 4);
+  assert.equal(game.state.resources.water, before.water - 4);
+  assert.equal(game.state.resources.coin, before.coin + 10);
+  assert.equal(game.state.storm.attempts, 1);
+  assert.equal(game.getStormStatus().ready, false, 'Existing live-inventory readiness semantics are preserved');
+  assert.deepEqual(game.getStormStatus().objectives.map(({ id, current, target, complete }) => ({ id, current, target, complete })), [
+    { id: 'food', current: 6, target: 6, complete: true },
+    { id: 'command', current: 2, target: 2, complete: true },
+    { id: 'water', current: 6, target: 6, complete: true },
+  ]);
+  const passedState = game.getState();
+  assert.equal(game.faceStorm().ok, false);
+  assert.deepEqual(game.getState(), passedState);
+  const reward = QUESTS.find((quest) => quest.id === 'command').reward;
+  assert.deepEqual(game.claimQuest('command').reward, reward);
+  for (const [resource, amount] of Object.entries(reward)) assert.equal(game.state.resources[resource], passedState.resources[resource] + amount, resource);
+  const claimedState = game.getState();
+  assert.equal(game.claimQuest('command').ok, false);
+  assert.deepEqual(game.getState(), claimedState);
+  game.state.resources.food = 0;
+  game.state.resources.water = 0;
+  assert.equal(game.getStormStatus().objectives.every((objective) => objective.complete), true);
+});
+
+test('storm objectives restore from existing saves without adding persisted fields', () => {
+  for (const status of ['approaching', 'passed']) {
+    const storage = memoryStorage();
+    const game = new GameState({ storage, now: () => 1_000_000, autoLoad: false });
+    game.state.storm.status = status;
+    game.state.storm.attempts = status === 'passed' ? 1 : 0;
+    game.state.buildings[0].level = 2;
+    game.state.resources.food = 2;
+    game.state.resources.water = 3;
+    const stateKeys = Object.keys(game.state);
+    const stormKeys = Object.keys(game.state.storm);
+    const expected = game.getStormStatus();
+    assert.equal(game.save().persisted, true);
+    const raw = JSON.parse(storage.getItem('fkssj-save-v1'));
+    assert.deepEqual(Object.keys(raw), stateKeys);
+    assert.deepEqual(Object.keys(raw.storm), stormKeys);
+    assert.equal(raw.version, 1);
+    assert.equal(Object.hasOwn(raw.storm, 'objectives'), false);
+    const restored = new GameState({ storage, now: () => 1_000_000 });
+    assert.equal(restored.persistenceLocked, false);
+    assert.deepEqual(restored.getStormStatus(), expected);
+    assert.deepEqual(Object.keys(restored.state), stateKeys);
+    assert.deepEqual(Object.keys(restored.state.storm), stormKeys);
+  }
+});
+
 test('the entire first chapter is reachable using public actions, including rescue and storm', () => {
   const game = createGame();
   for (let index = 0; index < 3; index++) game.collect('wood');

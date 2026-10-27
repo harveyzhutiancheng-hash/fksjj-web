@@ -1,4 +1,5 @@
 node_modules/
+/node_modules
 .DS_Store
 test-results/
 
@@ -56,3 +57,11 @@ localStorage*.json
 fkssj-save*.json
 fkssj-account-save*.json
 fkssj-account-meta*.json
+
+# Private development state and generated verification evidence
+/validation-artifacts/
+/recovery-inputs/
+/.agents/
+/.codex/
+/.pytest_cache/
+/artifacts/

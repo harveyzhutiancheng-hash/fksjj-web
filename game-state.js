@@ -445,7 +445,17 @@ export class GameState {
   getStormStatus() {
     const commandLevel = this.state.buildings.find((building) => building.type === 'command')?.level || 1;
     const ready = commandLevel >= 2 && this.state.resources.water >= 6 && this.state.resources.food >= 6;
-    return { ...this.state.storm, ready, commandLevel, requirements: { commandLevel: 2, water: 6, food: 6 } };
+    const passed = this.state.storm.status === 'passed';
+    // These are the project's existing storm requirements. Food still shares
+    // its legacy inventory with farm/kitchen output; it is not the first-meal
+    // production counter. A passed storm records that these goals were met,
+    // even after faceStorm spends the supplies. No extra save ledger is needed.
+    const objectives = [
+      { id: 'food', current: this.state.resources.food, target: 6, action: { type: 'production', buildingType: 'slicer', recipeId: 'sashimi' } },
+      { id: 'command', current: commandLevel, target: 2, action: { type: 'building', buildingType: 'command' } },
+      { id: 'water', current: this.state.resources.water, target: 6, action: { type: 'building', buildingType: 'purifier' } },
+    ].map((objective) => ({ ...objective, current: passed ? Math.max(objective.current, objective.target) : objective.current, complete: passed || objective.current >= objective.target }));
+    return { ...this.state.storm, ready, commandLevel, requirements: { commandLevel: 2, water: 6, food: 6 }, objectives };
   }
 
   faceStorm() {
