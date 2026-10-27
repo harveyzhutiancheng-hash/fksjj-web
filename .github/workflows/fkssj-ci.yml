@@ -1,0 +1,47 @@
+name: FKSSJ source and release safety CI
+
+# Pull requests run tests only. Publication has a separate manual workflow.
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+concurrency:
+  group: fkssj-ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out the pull request for tests without stored credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24.19.0'
+          check-latest: false
+          package-manager-cache: false
+      - name: Set up Python 3.12
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+          check-latest: false
+      - name: Install locked test dependencies without lifecycle scripts
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          python3 -m pip install --disable-pip-version-check --only-binary=:all: PyYAML==6.0.2
+      - name: Test game and account source behavior
+        run: npm run test:source
+      - name: Test backend and release safety with isolated fixtures
+        run: |
+          python3 -B -m unittest discover -s api -t . -p 'test_*.py' -v
+          python3 -B -m unittest discover -s deploy -t . -p 'test_*.py' -v
+      - name: Test actual localhost HTTP account integration
+        run: npm run test:http

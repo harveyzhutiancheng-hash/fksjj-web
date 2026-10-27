@@ -1,0 +1,43 @@
+# INERT TEMPLATE. No users, groups, directories, credentials or service exist
+# merely because this file exists. An administrator must separately provision:
+# users fkssj-release/fkssj-deploy, shared group fkssj-release, state owner/group
+# allowing both users access, state dirs 0770, shared files 0660; never game DB.
+# /etc/fkssj-release/config.json must be root-owned, not group-writable;
+# hmac.key is exactly 32 raw bytes, root:fkssj-release 0640, never in source.
+# Existing-site path remains https://PLACEHOLDER.invalid/_fkssj-release.
+[Unit]
+Description=FKSSJ signed release receiver (template; receive only)
+After=network.target
+RequiresMountsFor=/var/lib/fkssj-release
+
+[Service]
+Type=simple
+User=fkssj-release
+Group=fkssj-release
+UMask=0007
+WorkingDirectory=/opt/fkssj-release
+ExecStart=/usr/bin/python3 -I -B /opt/fkssj-release/release_channel.py receiver
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+ReadOnlyPaths=/opt/fkssj-release /etc/fkssj-release
+ReadWritePaths=/var/lib/fkssj-release
+InaccessiblePaths=-/srv/fkssj -/var/lib/fkssj
+# Code binds only 127.0.0.1:8790; TLS termination is the separate nginx template.
+# No API/database/static-release-root write rights are granted to this user.
+
+[Install]
+WantedBy=multi-user.target
